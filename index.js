@@ -1,8 +1,10 @@
 var cityBlocks = [];
 var cityBlocksMeshes = [];
+var roadsMeshes = [];
 let loaded = false;
-let roadCorners;
+var roadCorners;
 var road;
+var crossroads;
 let roadIntervalX = 0;
 let roadIntervalY = 0;
        
@@ -71,19 +73,22 @@ function generateCity(sizeX, sizeY){
 
     cityBlocks = [sizeX];
     cityBlocksMeshes = [sizeX];
-    
+    roadsMeshes = [sizeX];
 
     for(let i = 0; i < sizeX; i++){
         let row = [sizeY];
         cityBlocks[i] = row;
-
+        let row1 = [sizeY];
+        cityBlocksMeshes[i] = row1;
+        let row2 = [sizeY];
+        roadsMeshes[i] = row2;
     }
 
-    for(let i = 0; i < sizeX; i++){
-        let row = [sizeY];
-        cityBlocksMeshes[i] = row;
+    // for(let i = 0; i < sizeX; i++){
+    //     let row = [sizeY];
+    //     cityBlocksMeshes[i] = row;
         
-    }
+    // }
 
     for(let i = 0; i < sizeX; i++){
         for(let j = 0; j < sizeY; j++){
@@ -91,7 +96,7 @@ function generateCity(sizeX, sizeY){
         }
     }
    
-    console.log(cityBlocks);
+    
 
     
 
@@ -179,20 +184,34 @@ function generateCity(sizeX, sizeY){
                 console.log("a")
             }else if( cityBlocks[i][j] === "s"){
                 if(i != 0 || j != 0){
-                    let roadObj = new THREE.Mesh( road.geometry, road.material );
-                    roadObj.position.copy(cityBlocksMeshes[i][j].position);
-                    roadObj.position.y += 0.5;
+                    let roadMesh = new THREE.Mesh( road.geometry, road.material );
+                    roadMesh.position.copy(cityBlocksMeshes[i][j].position);
+                    roadMesh.position.y += 0.5;
                     if(tempCounter == roadIntervalY){
-                        roadObj.rotation.y = Math.PI/2;
+                        roadMesh.rotation.y = Math.PI/2;
                         tempCounter = 0;
                     }
-
-                    scene.add(roadObj);
+                   
+                    roadsMeshes[i][j] = roadMesh;
+                    scene.add(roadMesh);
                 }
                 
                 
             }
             tempCounter++;
+        }
+    }
+
+    for(let i = 0; i < sizeX; i+= roadIntervalX){
+        for(let j = 0; j < sizeY; j+= roadIntervalY){
+                    
+            let roadObj = new THREE.Mesh( crossRoads.geometry, crossRoads.material );
+            roadObj.position.copy(cityBlocksMeshes[i][j].position);
+            roadObj.position.y = 0.5;
+            scene.remove(roadsMeshes[i][j]);
+            roadsMeshes[i][j] = roadObj;
+            scene.add(roadObj);
+                    
         }
     }
 
@@ -291,6 +310,39 @@ function importPrefabs(){
                 if ( child instanceof THREE.Mesh ) {
                     
                     roadCorners = new THREE.Mesh(child.geometry, child.material);
+                
+                }
+            } );
+            
+
+        });
+
+    });
+
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.setPath( 'models/1square/' );
+    var url = "road3.mtl";
+    mtlLoader.load( url, function( materials ) {
+
+        materials.preload();
+
+        var objLoader = new THREE.OBJLoader();
+        objLoader.setMaterials( materials );
+        objLoader.setPath( 'models/1square/' );
+        objLoader.load( 'road3.obj', function ( object ) {
+
+            
+            object.position.y = 0.5;
+            object.position.x -= 0.001;
+            
+            //object.rotation.y = Math.PI/2;
+            object.castShadow = true;
+            object.receiveShadow = true;
+            object.traverse( function ( child ) {
+
+                if ( child instanceof THREE.Mesh ) {
+                    
+                    crossRoads = new THREE.Mesh(child.geometry, child.material);
                 
                 }
             } );
