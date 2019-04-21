@@ -4,6 +4,8 @@ var roadsMeshes = [];
 let loaded = false;
 var roadCorners;
 var road;
+var house;
+var predio;
 var crossroads;
 let roadIntervalX = 0;
 let roadIntervalY = 0;
@@ -42,10 +44,6 @@ var geometryGround = new THREE.BoxGeometry( 1, 1, 1 );
 var materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(139,69,19)") } );
 
 importPrefabs();
-
-
-
-
 
 // camera.position.y = 5;
 // camera.position.x = 10;
@@ -151,7 +149,7 @@ function generateCity(sizeX, sizeY){
                 cityBlocksMeshes[i][j] = ground;
             }else if( cityBlocks[i][j] === "b"){
                 let geometryGround = new THREE.BoxGeometry( 1, 1, 1 );
-                let materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(0,250,0)") } );
+                let materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(0,100,0)") } );
                 let ground = new THREE.Mesh( geometryGround, materialGround );
                 ground.receiveShadow = true;
                 cityBlocksMeshes[i][j] = ground;
@@ -181,12 +179,13 @@ function generateCity(sizeX, sizeY){
     for(let i = 0; i < sizeX; i++){
         for(let j = 0; j < sizeY; j++){
             if( cityBlocks[i][j] === "b"){
-                console.log("a")
+                chooseHouseType(i,j);
             }else if( cityBlocks[i][j] === "s"){
                 if(i != 0 || j != 0){
                     let roadMesh = new THREE.Mesh( road.geometry, road.material );
                     roadMesh.position.copy(cityBlocksMeshes[i][j].position);
                     roadMesh.position.y += 0.5;
+                    roadMesh.receiveShadow = true;
                     if(tempCounter == roadIntervalY){
                         roadMesh.rotation.y = Math.PI/2;
                         tempCounter = 0;
@@ -215,18 +214,50 @@ function generateCity(sizeX, sizeY){
         }
     }
 
+    
+
 
     roadCorners.position.copy(cityBlocksMeshes[0][0].position);
     roadCorners.position.y += 0.5;
     scene.add(roadCorners);
 
+    // house.position.copy(cityBlocksMeshes[9][11].position)
+    // house.position.y += 0.65;
+    // scene.add(house);
+
+    // predio.position.copy(cityBlocksMeshes[10][11].position)
+    // predio.position.y += 0.5;
+    // scene.add(predio);
+
+    console.log(predio)
 }
 
+
+function chooseHouseType(i,j){
+    let type = Math.floor(Math.random() * 2);   
+
+    if(type == 0){
+        let tempHouse = new THREE.Mesh(house.geometry, house.material);
+        tempHouse.castShadow = true;
+        tempHouse.receiveShadow = true;
+        tempHouse.position.copy(cityBlocksMeshes[i][j].position);
+        tempHouse.position.y += 0.65;
+        scene.add(tempHouse);
+    }else{
+        let tempBuilding = new THREE.Mesh(predio.geometry, predio.material);
+        tempBuilding.castShadow = true;
+        tempBuilding.receiveShadow = true;
+        tempBuilding.position.copy(cityBlocksMeshes[i][j].position);
+        tempBuilding.position.y += 0.5;
+        scene.add(tempBuilding);
+    }
+
+}
 
 function importPrefabs(){
 
     var mtlLoader = new THREE.MTLLoader();
-    mtlLoader.setPath( 'models/1square/' );
+    mtlLoader.setPath( 'models/1square/obj/' );
     var url = "house1.mtl";
     mtlLoader.load( url, function( materials ) {
 
@@ -234,7 +265,7 @@ function importPrefabs(){
 
         var objLoader = new THREE.OBJLoader();
         objLoader.setMaterials( materials );
-        objLoader.setPath( 'models/1square/' );
+        objLoader.setPath( 'models/1square/obj/' );
         objLoader.load( 'house1.obj', function ( object ) {
 
             
@@ -244,11 +275,34 @@ function importPrefabs(){
                 if ( child instanceof THREE.Mesh ) {
                     
                     house = new THREE.Mesh(child.geometry, child.material);
-                    house.position.y = 0.64;
-                    house.position.z -= 0.13;
-                    house.castShadow = true;
-                    house.receiveShadow = true;
-                    //scene.add(house);
+                   
+                }
+            } );
+
+        });
+
+    });
+
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.setPath( 'models/1square/obj/' );
+    var url = "predio1.mtl";
+    mtlLoader.load( url, function( materials ) {
+
+        materials.preload();
+
+        var objLoader = new THREE.OBJLoader();
+        objLoader.setMaterials( materials );
+        objLoader.setPath( 'models/1square/obj/' );
+        objLoader.load( 'predio1.obj', function ( object ) {
+
+            
+           
+            object.traverse( function ( child ) {
+
+                if ( child instanceof THREE.Mesh ) {
+                    
+                    predio = new THREE.Mesh(child.geometry, child.material);
+                   
                 }
             } );
 
@@ -354,3 +408,5 @@ function importPrefabs(){
 
 
 }
+
+
