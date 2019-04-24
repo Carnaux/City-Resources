@@ -13,6 +13,9 @@ var predio;
 var crossroads;
 let roadIntervalX = 0;
 let roadIntervalY = 0;
+let consumptionTable;
+
+var mouse = new THREE.Vector2();
        
 var scene = new THREE.Scene();
 scene.background = new THREE.Color("rgb(150,150,150)");
@@ -47,7 +50,12 @@ renderDiv.appendChild( renderer.domElement );
 var geometryGround = new THREE.BoxGeometry( 1, 1, 1 );
 var materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(139,69,19)") } );
 
+consumptionValues();
+
 importPrefabs();
+
+window.addEventListener( 'mousedown', onDocumentMouseDown, false );
+window.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
 var animate = function () {
     requestAnimationFrame( animate );
@@ -80,12 +88,6 @@ function generateCity(sizeX, sizeY){
         let row2 = [sizeY];
         roadsMeshes[i] = row2;
     }
-
-    // for(let i = 0; i < sizeX; i++){
-    //     let row = [sizeY];
-    //     cityBlocksMeshes[i] = row;
-        
-    // }
 
     for(let i = 0; i < sizeX; i++){
         for(let j = 0; j < sizeY; j++){
@@ -208,6 +210,8 @@ function generateCity(sizeX, sizeY){
                     
         }
     }
+
+    generateConsumption();
 
     roadCorners.position.copy(cityBlocksMeshes[0][0].position);
     roadCorners.position.y += 0.5;
@@ -517,6 +521,30 @@ function importPrefabs(){
 
 }
 
+function consumptionValues(){
+    
+    consumptionTable = {
+        energy:{
+            shower: 5500,
+            lamp: 9,
+            freezer: 500,
+            dish: 1500,
+            washer: 1000,
+            dryer: 3500,
+            tv: 90
+        },
+        water:{
+            sink: 1,
+            shower: 40,
+            toilet: 4,
+            washer: 8.4,
+            dish: 15,
+        }
+        
+    }
+
+}
+
 function generateConsumption(){
     for(let i = 0; i < buildingsTypes.length; i++){
 
@@ -524,21 +552,28 @@ function generateConsumption(){
         let water = generateWater(buildingsTypes[i], energy);
 
         let houseGoods = {
-            energy: energy,
-            water: water,
+            energy: {
+                quantity: energy,
+                consumption: generateEnergyConsumption(energy)
+            },
+            water: {
+                quantity: water,
+                consumption: generateWaterConsumption(water)
+            }
         }
+
+        buildingsConsumption.push(houseGoods);
     }
 }
 
 function generateEnergy(type){
     if(type == 0){
         energyGoods = {
-            lamp: Math.floor(Math.random() * 4) + 13,
+            lamp: Math.floor(Math.random() * 14) + 4,
             shower: 1,
             freezer: 1,
             dish: Math.floor(Math.random() * 2),
             tv: Math.floor(Math.random() * 3),
-            heat: Math.floor(Math.random() * 3),
             washer:  Math.floor(Math.random() * 2),
             dryer:  Math.floor(Math.random() * 2),
         }
@@ -546,12 +581,11 @@ function generateEnergy(type){
         return energyGoods;
     }else if( type == 1){
         energyGoods = {
-            lamp: Math.floor(Math.random() * 8) + 26,
+            lamp: Math.floor(Math.random() * 26) + 8,
             shower: Math.floor(Math.random() * 2),
             freezer: 1,
             dish: Math.floor(Math.random() * 2),
             tv: Math.floor(Math.random() * 5),
-            heat: Math.floor(Math.random() * 6),
             washer:  Math.floor(Math.random() * 2),
             dryer:  Math.floor(Math.random() * 2),
         }
@@ -559,12 +593,11 @@ function generateEnergy(type){
         return energyGoods;
     }else if( type == 2){
         energyGoods = {
-            lamp: Math.floor(Math.random() * 80) + 260,
+            lamp: Math.floor(Math.random() * 300) + 80,
             shower: 20,
             freezer: 20,
             dish: Math.floor(Math.random() * 20),
             tv: Math.floor(Math.random() * 60),
-            heat: Math.floor(Math.random() * 60),
             washer:  20,
             dryer:  20,
         }
@@ -572,6 +605,31 @@ function generateEnergy(type){
         return energyGoods;
     }
 
+}
+
+function generateEnergyConsumption(energy){
+    let tempObj = {
+        lamp: (energy.lamp * consumptionTable.energy.lamp * 8)/1000,
+        shower: (energy.shower * consumptionTable.energy.shower)/1000,
+        freezer: (energy.freezer * consumptionTable.energy.freezer * 10)/1000,
+        dish: (energy.dish * consumptionTable.energy.dish * 4)/1000,
+        tv: (energy.tv * consumptionTable.energy.tv * 10)/1000,
+        washer: (energy.washer * consumptionTable.energy.washer)/1000,
+        dryer: (energy.dryer * consumptionTable.energy.dryer * 2)/1000,
+    }
+
+    return tempObj;
+}
+
+function generateWaterConsumption(water){
+    let tempObj = {
+        sink: (water.shower * consumptionTable.water.shower * 8),
+        shower: (water.shower * consumptionTable.water.shower),
+        dish: (water.dish * consumptionTable.water.dish * 4),
+        washer: (water.washer * consumptionTable.water.washer),
+    }
+
+    return tempObj;
 }
 
 function generateWater(type, energy){
@@ -606,5 +664,43 @@ function generateWater(type, energy){
 
         return water;
     }
+
+}
+
+function onDocumentMouseDown(e) {
+    e.preventDefault();
+    
+    mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+    mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+  
+    let raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, camera);
+  
+    let intersects = raycaster.intersectObjects(buildingsMeshes);
+
+}
+
+function onDocumentMouseMove(e) {
+    e.preventDefault();
+
+    
+    mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+    mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+  
+    let raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, camera);
+  
+    let intersects = raycaster.intersectObjects(buildingsMeshes);
+
+    if(intersects.length > 0){
+        let foundIndex;
+        for(let i = 0; i < buildingsMeshes.length; i++){
+            if(intersects[0].object.id == buildingsMeshes[i].id){
+                console.log(buildingsConsumption[i]);
+            }
+        }
+    }
+
+
 
 }
