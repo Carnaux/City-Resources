@@ -520,7 +520,13 @@ function importPrefabs(){
 function generateConsumption(){
     for(let i = 0; i < buildingsTypes.length; i++){
 
-        generateEnergy(i, buildingsTypes[i]);
+        let energy = generateEnergy(buildingsTypes[i]);
+        let water = generateWater(buildingsTypes[i], energy);
+
+        let houseGoods = {
+            energy: energy,
+            water: water,
+        }
     }
 }
 
@@ -564,6 +570,41 @@ function generateEnergy(type){
         }
 
         return energyGoods;
+    }
+
+}
+
+function generateWater(type, energy){
+    if(type == 0){
+        water = {
+            toilet: 1,
+            sink: 2,
+            shower: 1,
+            dish: energy.dish,
+            washer: energy.washer,
+        }
+
+        return water;
+    }else if( type == 1){
+        water = {
+            toilet: energy.shower,
+            sink: energy.shower + 1,
+            shower: energy.shower,
+            dish: energy.dish,
+            washer: energy.washer,
+        }
+
+        return water;
+    }else if( type == 2){
+        water = {
+            toilet: energy.shower ,
+            sink: energy.shower + 1*20,
+            shower: energy.shower,
+            dish: energy.dish,
+            washer: energy.washer,
+        }
+
+        return water;
     }
 
 }
