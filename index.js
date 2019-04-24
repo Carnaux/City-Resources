@@ -13,13 +13,17 @@ let predio;
 let crossroads;
 let roadIntervalX = 0;
 let roadIntervalY = 0;
+
 let consumptionTable;
+let useFrequency;
 
 let house1Outline;
 let house2Outline;
 let predioOutline;
 
 let lastHover;
+
+let chart;
 
 let cityConsumption = {
     energy:[0,0,0,0],
@@ -582,10 +586,11 @@ function consumptionValues(){
 function generateConsumption(){
     for(let i = 0; i < buildingsTypes.length; i++){
 
-        let energy = generateEnergy(buildingsTypes[i]);
-        let water = generateWater(buildingsTypes[i], energy);
-        let energyConsumption = generateEnergyConsumption(energy);
-        let waterConsumption = generateWaterConsumption(water);
+        useFrequency = randomizeUsage();
+        let energy = generateEnergyGoods(buildingsTypes[i]);
+        let water = generateWaterGoods(buildingsTypes[i], energy);
+        let energyConsumption = generateEnergyConsumption(energy, useFrequency);
+        let waterConsumption = generateWaterConsumption(water, useFrequency);
 
         let energyTotal = Math.floor(sumObjs(energyConsumption));
         let waterTotal =  Math.floor(sumObjs(waterConsumption));
@@ -601,7 +606,8 @@ function generateConsumption(){
             water: {
                 quantity: water,
                 consumption: waterConsumption
-            }
+            },
+            frequency: useFrequency,
         }
 
         buildingsConsumption.push(houseStats);
@@ -633,7 +639,7 @@ function createChart(){
 
     Chart.defaults.global.defaultFontColor = 'black';
     var ctx = document.getElementById('myChart').getContext('2d');
-    var chart = new Chart(ctx, {
+    chart = new Chart(ctx, {
         // The type of chart we want to create
         type: 'line',
 
@@ -677,7 +683,7 @@ function sumObjs(obj){
     return Object.values(obj).reduce((a, b) => a + b);  
 }
 
-function generateEnergy(type){
+function generateEnergyGoods(type){
     if(type == 0){
         energyGoods = {
             lamp: Math.floor(Math.random() * 14) + 4,
@@ -718,7 +724,7 @@ function generateEnergy(type){
 
 }
 
-function generateWater(type, energy){
+function generateWaterGoods(type, energy){
     if(type == 0){
         water = {
             toilet: 1,
@@ -753,26 +759,42 @@ function generateWater(type, energy){
 
 }
 
-function generateEnergyConsumption(energy){
+function generateEnergyConsumption(energy, f){
     let tempObj = {
-        lamp: (energy.lamp * consumptionTable.energy.lamp * 8)/1000,
-        shower: (energy.shower * consumptionTable.energy.shower)/1000,
+        lamp: (energy.lamp * consumptionTable.energy.lamp * f.lamp)/1000,
+        shower: (energy.shower * consumptionTable.energy.shower * f.shower)/1000,
         freezer: (energy.freezer * consumptionTable.energy.freezer * 10)/1000,
-        dish: (energy.dish * consumptionTable.energy.dish * 4)/1000,
-        tv: (energy.tv * consumptionTable.energy.tv * 10)/1000,
-        washer: (energy.washer * consumptionTable.energy.washer)/1000,
-        dryer: (energy.dryer * consumptionTable.energy.dryer * 2)/1000,
+        dish: (energy.dish * consumptionTable.energy.dish * f.dish)/1000,
+        tv: (energy.tv * consumptionTable.energy.tv * f.tv)/1000,
+        washer: (energy.washer * consumptionTable.energy.washer * f.washer)/1000,
+        dryer: (energy.dryer * consumptionTable.energy.dryer * f.dryer)/1000,
     }
 
     return tempObj;
 }
 
-function generateWaterConsumption(water){
+function generateWaterConsumption(water, f){
     let tempObj = {
-        sink: (water.sink * consumptionTable.water.sink * 8),
-        shower: (water.shower * consumptionTable.water.shower),
-        dish: (water.dish * consumptionTable.water.dish * 4),
-        washer: (water.washer * consumptionTable.water.washer),
+        sink: (water.sink * consumptionTable.water.sink * f.sink),
+        toilet: (water.toilet * consumptionTable.water.toilet * f.toilet),
+        shower: (water.shower * consumptionTable.water.shower * f.shower),
+        dish: (water.dish * consumptionTable.water.dish * f.dish),
+        washer: (water.washer * consumptionTable.water.washer * f.washer),
+    }
+
+    return tempObj;
+}
+
+function randomizeUsage(){
+    let tempObj = {
+        lamp: Math.floor(Math.random() * 21),
+        shower:  Math.floor(Math.random() * 7),
+        dish: Math.floor(Math.random() * 11),
+        tv: Math.floor(Math.random() * 21),
+        washer: Math.floor(Math.random() * 3),
+        dryer: Math.floor(Math.random() * 7),
+        toilet: Math.floor(Math.random() * 10),
+        sink: Math.floor(Math.random() * 16),
     }
 
     return tempObj;
@@ -854,6 +876,46 @@ function onDocumentMouseDown(e) {
     raycaster.setFromCamera(mouse, camera);
   
     let intersects = raycaster.intersectObjects(buildingsMeshes);
+
+    
+
+    if(intersects.length > 0){
+        for(let i = 0; i < buildingsMeshes.length; i++){
+            if(intersects[0].object.id == buildingsMeshes[i].id){
+                let db = buildingsConsumption[i].dayCycle;
+                console.log(buildingsConsumption[i])
+                chart.config.data.datasets[0].data = [db.energy[0], db.energy[1], db.energy[2], db.energy[3], db.energy[0]];
+                chart.config.data.datasets[1].data = [db.water[0], db.water[1], db.water[2], db.water[3], db.water[0]];
+                chart.update();
+
+                if(buildingsTypes[i] == 0){
+                    lastHover = house1Outline;
+                    lastHover.visible = true;
+                    lastHover.position.copy(buildingsMeshes[i].position);
+                    lastHover.rotation.copy(buildingsMeshes[i].rotation);
+                }else if(buildingsTypes[i] == 1){
+                    lastHover = house2Outline;
+                    lastHover.visible = true;
+                    lastHover.position.copy(buildingsMeshes[i].position);
+                    lastHover.rotation.copy(buildingsMeshes[i].rotation);
+                }else if(buildingsTypes[i] == 2){
+                    lastHover = predioOutline;
+                    lastHover.visible = true;
+                    lastHover.position.copy(buildingsMeshes[i].position);
+                    lastHover.rotation.copy(buildingsMeshes[i].rotation);
+                }
+            }
+        }
+
+    }else{
+        if(e.target.id != "myChart"){
+            let db = cityConsumption;
+            chart.config.data.datasets[0].data = [db.energy[0], db.energy[1], db.energy[2], db.energy[3], db.energy[0]];
+            chart.config.data.datasets[1].data = [db.water[0], db.water[1], db.water[2], db.water[3], db.water[0]];
+            chart.update();
+        }
+        
+    }
 
 }
 
