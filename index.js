@@ -1,24 +1,35 @@
-var cityBlocks = [];
-var cityBlocksMeshes = [];
-var buildingsMeshes = [];
-var buildingsTypes = [];
-var buildingsConsumption = [];
-var roadsMeshes = [];
+let cityBlocks = [];
+let cityBlocksMeshes = [];
+let buildingsMeshes = [];
+let buildingsTypes = [];
+let buildingsConsumption = [];
+let roadsMeshes = [];
 let loaded = false;
-var roadCorners;
-var road;
-var house;
-var house2;
-var predio;
-var crossroads;
+let roadCorners;
+let road;
+let house;
+let house2;
+let predio;
+let crossroads;
 let roadIntervalX = 0;
 let roadIntervalY = 0;
 let consumptionTable;
 
+let house1Outline;
+let house2Outline;
+let predioOutline;
+
+let lastHover;
+
+let cityConsumption = {
+    energy:[0,0,0,0],
+    water: [0,0,0,0]
+};
+
 var mouse = new THREE.Vector2();
        
 var scene = new THREE.Scene();
-scene.background = new THREE.Color("rgb(150,150,150)");
+scene.background = new THREE.Color("rgb(255,255,255)");
 // var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 
 var aspect = window.innerWidth / window.innerHeight;
@@ -28,7 +39,7 @@ camera = new THREE.OrthographicCamera( - d * aspect, d * aspect, d, - d, 1, 1000
 camera.position.set( 20, 20, 20 ); // all components equal
 camera.lookAt( scene.position ); // or the origin
 
-var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.5 );
+var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
 scene.add( directionalLight );
 
 directionalLight.position.set(20,20,20);
@@ -54,6 +65,7 @@ consumptionValues();
 
 importPrefabs();
 
+
 window.addEventListener( 'mousedown', onDocumentMouseDown, false );
 window.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
@@ -64,6 +76,7 @@ var animate = function () {
 
     if(!loaded){
         if ( road instanceof THREE.Mesh && roadCorners instanceof THREE.Mesh) {
+            createOutlines();
             generateCity(30,30);
             loaded = !loaded;
         }
@@ -73,6 +86,20 @@ var animate = function () {
 };
 
 animate();
+
+function createOutlines(){
+    var edges1 = new THREE.EdgesGeometry( house.geometry );
+    house1Outline = new THREE.LineSegments( edges1, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
+    scene.add(house1Outline);
+
+    var edges2 = new THREE.EdgesGeometry( house2.geometry );
+    house2Outline = new THREE.LineSegments( edges2, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
+    scene.add(house2Outline);
+
+    var edges3 = new THREE.EdgesGeometry( predio.geometry );
+    predioOutline = new THREE.LineSegments( edges3, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
+    scene.add(predioOutline);
+}
 
 function generateCity(sizeX, sizeY){
 
@@ -223,20 +250,24 @@ function chooseHouseType(i,j){
     let rot = verifyRoadPos(i, j);
     if(type == 0){
         let typeHouse = Math.floor(Math.random() * 2);   
+        
         if(typeHouse == 0){
-
+            let cor = new THREE.Color("rgb(" + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255)+ "," + Math.floor(Math.random() * 255) +")");
             let tempHouse = new THREE.Mesh(house.geometry, house.material);
+            tempHouse.material[4].color = cor;     
             tempHouse.castShadow = true;
             tempHouse.receiveShadow = true;
             tempHouse.position.copy(cityBlocksMeshes[i][j].position);
             tempHouse.position.y += 0.65;
             tempHouse.rotation.y = rot;
-            scene.add(tempHouse);        
+            scene.add(tempHouse);   
+            
             buildingsMeshes.push(tempHouse);
             buildingsTypes.push(0);
         }else{
             let tempHouse = new THREE.Mesh(house2.geometry, house2.material);
             tempHouse.castShadow = true;
+            tempHouse.material[4].color = new THREE.Color("rgb(" + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255)+ "," + Math.floor(Math.random() * 255) +")");
             tempHouse.receiveShadow = true;
             tempHouse.position.copy(cityBlocksMeshes[i][j].position);
             tempHouse.position.y += 0.65;
@@ -519,6 +550,9 @@ function importPrefabs(){
     });
 
 
+ 
+
+
 }
 
 function consumptionValues(){
@@ -550,20 +584,97 @@ function generateConsumption(){
 
         let energy = generateEnergy(buildingsTypes[i]);
         let water = generateWater(buildingsTypes[i], energy);
+        let energyConsumption = generateEnergyConsumption(energy);
+        let waterConsumption = generateWaterConsumption(water);
 
-        let houseGoods = {
+        let energyTotal = Math.floor(sumObjs(energyConsumption));
+        let waterTotal =  Math.floor(sumObjs(waterConsumption));
+        
+       let distribution = distributeEnergy(energyTotal, waterTotal);
+
+        let houseStats = {
+            dayCycle: distribution,
             energy: {
                 quantity: energy,
-                consumption: generateEnergyConsumption(energy)
+                consumption: energyConsumption
             },
             water: {
                 quantity: water,
-                consumption: generateWaterConsumption(water)
+                consumption: waterConsumption
             }
         }
 
-        buildingsConsumption.push(houseGoods);
+        buildingsConsumption.push(houseStats);
     }
+
+    calculateTotal();
+}
+
+function calculateTotal(){
+    for(let i = 0; i < 4; i++){
+        cityConsumption.energy[0] += buildingsConsumption[i].dayCycle.energy[0];
+        cityConsumption.water[0] += buildingsConsumption[i].dayCycle.water[0];
+
+        cityConsumption.energy[1] += buildingsConsumption[i].dayCycle.energy[1];
+        cityConsumption.water[1] += buildingsConsumption[i].dayCycle.water[1];
+
+        cityConsumption.energy[2] += buildingsConsumption[i].dayCycle.energy[2];
+        cityConsumption.water[2] += buildingsConsumption[i].dayCycle.water[2];
+
+        cityConsumption.energy[3] += buildingsConsumption[i].dayCycle.energy[3];
+        cityConsumption.water[3] += buildingsConsumption[i].dayCycle.water[3];
+    }
+    createChart();
+}
+
+function createChart(){
+
+    let db = cityConsumption;
+
+    Chart.defaults.global.defaultFontColor = 'black';
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var chart = new Chart(ctx, {
+        // The type of chart we want to create
+        type: 'line',
+
+        // The data for our dataset
+        data: {
+            labels: ['00:00', '06:00', '12:00','18:00','00:00'],
+            datasets: [{
+                label: "Energy (kW/h)",
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: [db.energy[0], db.energy[1], db.energy[2], db.energy[3], db.energy[0]]
+            },
+            {
+                label: "Water (L)",
+                backgroundColor: 'rgb(50, 50, 90)',
+                borderColor: 'rgb(50, 50, 90)',
+                data: [db.water[0], db.water[1], db.water[2], db.water[3], db.water[0]]
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }],
+                yAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }]
+            }
+        }
+    });
+}
+
+function sumObjs(obj){
+    return Object.values(obj).reduce((a, b) => a + b);  
 }
 
 function generateEnergy(type){
@@ -582,7 +693,7 @@ function generateEnergy(type){
     }else if( type == 1){
         energyGoods = {
             lamp: Math.floor(Math.random() * 26) + 8,
-            shower: Math.floor(Math.random() * 2),
+            shower: Math.floor(Math.random() * 2) + 1,
             freezer: 1,
             dish: Math.floor(Math.random() * 2),
             tv: Math.floor(Math.random() * 5),
@@ -605,31 +716,6 @@ function generateEnergy(type){
         return energyGoods;
     }
 
-}
-
-function generateEnergyConsumption(energy){
-    let tempObj = {
-        lamp: (energy.lamp * consumptionTable.energy.lamp * 8)/1000,
-        shower: (energy.shower * consumptionTable.energy.shower)/1000,
-        freezer: (energy.freezer * consumptionTable.energy.freezer * 10)/1000,
-        dish: (energy.dish * consumptionTable.energy.dish * 4)/1000,
-        tv: (energy.tv * consumptionTable.energy.tv * 10)/1000,
-        washer: (energy.washer * consumptionTable.energy.washer)/1000,
-        dryer: (energy.dryer * consumptionTable.energy.dryer * 2)/1000,
-    }
-
-    return tempObj;
-}
-
-function generateWaterConsumption(water){
-    let tempObj = {
-        sink: (water.shower * consumptionTable.water.shower * 8),
-        shower: (water.shower * consumptionTable.water.shower),
-        dish: (water.dish * consumptionTable.water.dish * 4),
-        washer: (water.washer * consumptionTable.water.washer),
-    }
-
-    return tempObj;
 }
 
 function generateWater(type, energy){
@@ -667,6 +753,97 @@ function generateWater(type, energy){
 
 }
 
+function generateEnergyConsumption(energy){
+    let tempObj = {
+        lamp: (energy.lamp * consumptionTable.energy.lamp * 8)/1000,
+        shower: (energy.shower * consumptionTable.energy.shower)/1000,
+        freezer: (energy.freezer * consumptionTable.energy.freezer * 10)/1000,
+        dish: (energy.dish * consumptionTable.energy.dish * 4)/1000,
+        tv: (energy.tv * consumptionTable.energy.tv * 10)/1000,
+        washer: (energy.washer * consumptionTable.energy.washer)/1000,
+        dryer: (energy.dryer * consumptionTable.energy.dryer * 2)/1000,
+    }
+
+    return tempObj;
+}
+
+function generateWaterConsumption(water){
+    let tempObj = {
+        sink: (water.sink * consumptionTable.water.sink * 8),
+        shower: (water.shower * consumptionTable.water.shower),
+        dish: (water.dish * consumptionTable.water.dish * 4),
+        washer: (water.washer * consumptionTable.water.washer),
+    }
+
+    return tempObj;
+}
+
+function distributeEnergy(eT, wT){
+    let waterTimes = [];
+    let times = [];
+    for(let i = 0; i < 4; i++){
+        times[i] = null;
+        waterTimes[i] = null;
+    }
+
+    let total = eT;
+    let waterTotal = wT;
+
+    let first = Math.floor(Math.random() * 3);
+
+    let amount = Math.floor(Math.random() * 2) + 1;
+    
+    let energyFirst = (eT/4) * amount;
+    times[first] = energyFirst;
+    total -= energyFirst;
+
+    let waterFirst = (wT/4) * amount;
+    waterTimes[first] = waterFirst;
+    waterTotal -= waterFirst;
+
+
+    let second;
+    let secondAmount;
+    
+    if(amount == 2){
+        for(let i = 0; i < times.length; i++){
+            if( times[i] == null){
+                times[i] = total/times.length - amount;
+                waterTimes[i] = waterTotal/waterTimes.length - amount;
+            }
+        }
+    }else{
+        second = Math.floor(Math.random() * 3);
+        while(second == first){
+            second = Math.floor(Math.random() * 3);
+        }
+
+        secondAmount = Math.floor(Math.random() * 2) + 1;
+        let energySecond = (total/ secondAmount);
+        times[second] = energySecond;
+        total -= energySecond;
+
+        let waterSecond = (waterTotal/ secondAmount);
+        waterTimes[second] = waterSecond;
+        waterTotal -= waterSecond;
+
+        for(let i = 0; i < times.length; i++){
+            if( times[i] == null){
+                times[i] = total/times.length - amount + secondAmount;
+                waterTimes[i] = waterTotal/waterTimes.length - amount + secondAmount;
+            }
+        }
+    }
+
+    let dist = {
+        energy: times,
+        water: waterTimes
+    }
+
+    return dist;
+
+}   
+
 function onDocumentMouseDown(e) {
     e.preventDefault();
     
@@ -693,14 +870,29 @@ function onDocumentMouseMove(e) {
     let intersects = raycaster.intersectObjects(buildingsMeshes);
 
     if(intersects.length > 0){
-        let foundIndex;
         for(let i = 0; i < buildingsMeshes.length; i++){
             if(intersects[0].object.id == buildingsMeshes[i].id){
-                console.log(buildingsConsumption[i]);
+                if(buildingsTypes[i] == 0){
+                    lastHover = house1Outline;
+                    lastHover.visible = true;
+                    lastHover.position.copy(buildingsMeshes[i].position);
+                    lastHover.rotation.copy(buildingsMeshes[i].rotation);
+                }else if(buildingsTypes[i] == 1){
+                    lastHover = house2Outline;
+                    lastHover.visible = true;
+                    lastHover.position.copy(buildingsMeshes[i].position);
+                    lastHover.rotation.copy(buildingsMeshes[i].rotation);
+                }else if(buildingsTypes[i] == 2){
+                    lastHover = predioOutline;
+                    lastHover.visible = true;
+                    lastHover.position.copy(buildingsMeshes[i].position);
+                    lastHover.rotation.copy(buildingsMeshes[i].rotation);
+                }
             }
         }
+    }else{
+        if(lastHover != null){
+            lastHover.visible = false;
+        }
     }
-
-
-
 }

@@ -6,3 +6,10 @@
     height: 500px;
     background-color: rgba(48, 51, 51,0.75);
 }
+
+#mainChart{
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 200px;
+}
