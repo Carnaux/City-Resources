@@ -1,0 +1,8 @@
+#menu{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 500px;
+    background-color: rgba(48, 51, 51,0.75);
+}

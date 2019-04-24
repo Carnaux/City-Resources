@@ -1,10 +1,14 @@
 var cityBlocks = [];
 var cityBlocksMeshes = [];
+var buildingsMeshes = [];
+var buildingsTypes = [];
+var buildingsConsumption = [];
 var roadsMeshes = [];
 let loaded = false;
 var roadCorners;
 var road;
 var house;
+var house2;
 var predio;
 var crossroads;
 let roadIntervalX = 0;
@@ -44,11 +48,6 @@ var geometryGround = new THREE.BoxGeometry( 1, 1, 1 );
 var materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(139,69,19)") } );
 
 importPrefabs();
-
-// camera.position.y = 5;
-// camera.position.x = 10;
-
-// camera.lookAt(0,0,0);
 
 var animate = function () {
     requestAnimationFrame( animate );
@@ -94,10 +93,6 @@ function generateCity(sizeX, sizeY){
         }
     }
    
-    
-
-    
-
     let tempRemainderX1 = sizeX-2 % 2;
     let tempRemainderX2 = sizeX-2 % 3;
     if( tempRemainderX1 < tempRemainderX2){
@@ -214,44 +209,130 @@ function generateCity(sizeX, sizeY){
         }
     }
 
-    
-
-
     roadCorners.position.copy(cityBlocksMeshes[0][0].position);
     roadCorners.position.y += 0.5;
     scene.add(roadCorners);
-
-    // house.position.copy(cityBlocksMeshes[9][11].position)
-    // house.position.y += 0.65;
-    // scene.add(house);
-
-    // predio.position.copy(cityBlocksMeshes[10][11].position)
-    // predio.position.y += 0.5;
-    // scene.add(predio);
-
-    console.log(predio)
 }
-
 
 function chooseHouseType(i,j){
     let type = Math.floor(Math.random() * 2);   
-
+    let rot = verifyRoadPos(i, j);
     if(type == 0){
-        let tempHouse = new THREE.Mesh(house.geometry, house.material);
-        tempHouse.castShadow = true;
-        tempHouse.receiveShadow = true;
-        tempHouse.position.copy(cityBlocksMeshes[i][j].position);
-        tempHouse.position.y += 0.65;
-        scene.add(tempHouse);
+        let typeHouse = Math.floor(Math.random() * 2);   
+        if(typeHouse == 0){
+
+            let tempHouse = new THREE.Mesh(house.geometry, house.material);
+            tempHouse.castShadow = true;
+            tempHouse.receiveShadow = true;
+            tempHouse.position.copy(cityBlocksMeshes[i][j].position);
+            tempHouse.position.y += 0.65;
+            tempHouse.rotation.y = rot;
+            scene.add(tempHouse);        
+            buildingsMeshes.push(tempHouse);
+            buildingsTypes.push(0);
+        }else{
+            let tempHouse = new THREE.Mesh(house2.geometry, house2.material);
+            tempHouse.castShadow = true;
+            tempHouse.receiveShadow = true;
+            tempHouse.position.copy(cityBlocksMeshes[i][j].position);
+            tempHouse.position.y += 0.65;
+            tempHouse.rotation.y = rot;
+            scene.add(tempHouse);
+            buildingsMeshes.push(tempHouse);
+            buildingsTypes.push(1);
+        }
+       
     }else{
         let tempBuilding = new THREE.Mesh(predio.geometry, predio.material);
         tempBuilding.castShadow = true;
         tempBuilding.receiveShadow = true;
         tempBuilding.position.copy(cityBlocksMeshes[i][j].position);
         tempBuilding.position.y += 0.5;
+        tempBuilding.rotation.y = rot;
         scene.add(tempBuilding);
+        buildingsMeshes.push(tempBuilding);
+        buildingsTypes.push(2);
     }
 
+      
+}
+
+function verifyRoadPos(indexI, indexJ){
+    let surround = [];
+    let chosenSide;
+
+    if(indexI != 29){
+        if(cityBlocks[indexI + 1][indexJ] == "s"){
+            let tempObj = {
+                side: Math.PI/2,
+                has: 1
+            };
+            surround.push(tempObj);
+        }else{
+            surround.push(null);
+        }
+    }else{
+        surround.push(null);
+    }
+    
+    if(indexI != 0){
+        if(cityBlocks[indexI - 1][indexJ] == "s"){
+            let tempObj = {
+                side: 3*Math.PI/2,
+                has: 1
+            };
+            surround.push(tempObj);
+        }else{
+            surround.push(null);
+        }
+    }else{
+        surround.push(null);
+    }
+
+    if(indexJ != 29){
+        if(cityBlocks[indexI][indexJ + 1] == "s"){
+            let tempObj = {
+                side: 0,
+                has: 1
+            };
+            surround.push(tempObj);
+        }else{
+            surround.push(null);
+        }
+    }else{
+        surround.push(null);
+    }
+    
+    if(indexJ != 0){
+        if(cityBlocks[indexI][indexJ - 1] == "s"){
+            let tempObj = {
+                side: Math.PI,
+                has: 1
+            };
+            surround.push(tempObj);
+        }else{
+            surround.push(null);
+        }
+    }else{
+        surround.push(null);
+    }
+    
+    let tempSurr = [];
+    for(let p = 0; p < surround.length; p++){
+        if(surround[p] != null){
+            tempSurr.push(surround[p]);
+        }
+    }
+
+    let surroundRand = Math.floor(Math.random() * tempSurr.length); 
+
+    if(tempSurr.length != 0){
+        chosenSide = tempSurr[surroundRand].side;
+    }else{
+        chosenSide = 0;
+    }
+    
+    return chosenSide;
 }
 
 function importPrefabs(){
@@ -275,6 +356,33 @@ function importPrefabs(){
                 if ( child instanceof THREE.Mesh ) {
                     
                     house = new THREE.Mesh(child.geometry, child.material);
+                   
+                }
+            } );
+
+        });
+
+    });
+
+    var mtlLoader = new THREE.MTLLoader();
+    mtlLoader.setPath( 'models/1square/obj/' );
+    var url = "house2.mtl";
+    mtlLoader.load( url, function( materials ) {
+
+        materials.preload();
+
+        var objLoader = new THREE.OBJLoader();
+        objLoader.setMaterials( materials );
+        objLoader.setPath( 'models/1square/obj/' );
+        objLoader.load( 'house2.obj', function ( object ) {
+
+            
+           
+            object.traverse( function ( child ) {
+
+                if ( child instanceof THREE.Mesh ) {
+                    
+                    house2 = new THREE.Mesh(child.geometry, child.material);
                    
                 }
             } );
@@ -409,4 +517,53 @@ function importPrefabs(){
 
 }
 
+function generateConsumption(){
+    for(let i = 0; i < buildingsTypes.length; i++){
 
+        generateEnergy(i, buildingsTypes[i]);
+    }
+}
+
+function generateEnergy(type){
+    if(type == 0){
+        energyGoods = {
+            lamp: Math.floor(Math.random() * 4) + 13,
+            shower: 1,
+            freezer: 1,
+            dish: Math.floor(Math.random() * 2),
+            tv: Math.floor(Math.random() * 3),
+            heat: Math.floor(Math.random() * 3),
+            washer:  Math.floor(Math.random() * 2),
+            dryer:  Math.floor(Math.random() * 2),
+        }
+
+        return energyGoods;
+    }else if( type == 1){
+        energyGoods = {
+            lamp: Math.floor(Math.random() * 8) + 26,
+            shower: Math.floor(Math.random() * 2),
+            freezer: 1,
+            dish: Math.floor(Math.random() * 2),
+            tv: Math.floor(Math.random() * 5),
+            heat: Math.floor(Math.random() * 6),
+            washer:  Math.floor(Math.random() * 2),
+            dryer:  Math.floor(Math.random() * 2),
+        }
+
+        return energyGoods;
+    }else if( type == 2){
+        energyGoods = {
+            lamp: Math.floor(Math.random() * 80) + 260,
+            shower: 20,
+            freezer: 20,
+            dish: Math.floor(Math.random() * 20),
+            tv: Math.floor(Math.random() * 60),
+            heat: Math.floor(Math.random() * 60),
+            washer:  20,
+            dryer:  20,
+        }
+
+        return energyGoods;
+    }
+
+}
