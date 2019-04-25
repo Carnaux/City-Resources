@@ -563,7 +563,7 @@ function consumptionValues(){
     
     consumptionTable = {
         energy:{
-            shower: 5500,
+            shower: 5500, 
             lamp: 9,
             freezer: 500,
             dish: 1500,
@@ -957,4 +957,8 @@ function onDocumentMouseMove(e) {
             lastHover.visible = false;
         }
     }
+}
+
+function simulate(){
+    
 }
