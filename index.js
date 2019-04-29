@@ -53,7 +53,7 @@ directionalLight.lookAt( scene.position );
 var light = new THREE.AmbientLight( 0x404040 ); // soft white light
 scene.add( light );
 
-var controls = new THREE.OrbitControls( camera );
+
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
@@ -61,6 +61,8 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
 let renderDiv = document.getElementById("renderDiv");
 renderDiv.appendChild( renderer.domElement );
+
+var controls = new THREE.OrbitControls( camera,  renderer.domElement);
 
 var geometryGround = new THREE.BoxGeometry( 1, 1, 1 );
 var materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(139,69,19)") } );
@@ -867,7 +869,7 @@ function distributeEnergy(eT, wT){
 }   
 
 function onDocumentMouseDown(e) {
-    e.preventDefault();
+   
     
     mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
     mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
@@ -920,8 +922,6 @@ function onDocumentMouseDown(e) {
 }
 
 function onDocumentMouseMove(e) {
-    e.preventDefault();
-
     
     mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
     mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
@@ -962,3 +962,32 @@ function onDocumentMouseMove(e) {
 function simulate(){
     
 }
+
+function calculateFlow(){
+    let L = parseFloat(document.getElementById("l").value);
+    let H = parseFloat(document.getElementById("h").value);
+    let A = parseFloat(document.getElementById("a").value);
+    let baseFlow = parseFloat(document.getElementById("v").value);
+    let pe = parseFloat(document.getElementById("pe").value);
+
+    let tc = (57 *  Math.pow((Math.pow(L, 3) / H), 0.385))/60;
+
+    let tr = tc/5;
+
+    let tp = 0.6 * tc + 0.5 * tr;
+
+    let tb = Math.floor(2.6*tp);
+    
+    let flowRate = (2 * (pe / 1000) * (71.8 * Math.pow(10, 6)))/( tb * 3600);
+
+    let totalFlow = baseFlow + flowRate;
+
+    let E =  parseFloat(document.getElementById("e").value);
+    let D = parseFloat(document.getElementById("d").value);
+    let R = parseFloat(document.getElementById("r").value);
+
+    let P = (E * ((totalFlow * R)*1000) * D)/100;
+   console.log(totalFlow * R, " ", P)
+}
+
+//71800000
