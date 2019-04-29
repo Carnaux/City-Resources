@@ -27,7 +27,9 @@ let chart;
 
 let cityConsumption = {
     energy:[0,0,0,0],
-    water: [0,0,0,0]
+    water: [0,0,0,0],
+    totalEnergy: 0,
+    totalWater: 0
 };
 
 var mouse = new THREE.Vector2();
@@ -40,8 +42,8 @@ var aspect = window.innerWidth / window.innerHeight;
 var d = 20;
 camera = new THREE.OrthographicCamera( - d * aspect, d * aspect, d, - d, 1, 1000 );
 
-camera.position.set( 20, 20, 20 ); // all components equal
-camera.lookAt( scene.position ); // or the origin
+camera.position.set( 35, 20, 35 ); 
+camera.lookAt( scene.position ); 
 
 var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
 scene.add( directionalLight );
@@ -50,15 +52,13 @@ directionalLight.position.set(20,20,20);
 directionalLight.castShadow = true;
 directionalLight.lookAt( scene.position );
 
-var light = new THREE.AmbientLight( 0x404040 ); // soft white light
+var light = new THREE.AmbientLight( 0x404040 ); 
 scene.add( light );
-
-
 
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap; // default THREE.PCFShadowMap
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; 
 let renderDiv = document.getElementById("renderDiv");
 renderDiv.appendChild( renderer.domElement );
 
@@ -631,7 +631,13 @@ function calculateTotal(){
 
         cityConsumption.energy[3] += buildingsConsumption[i].dayCycle.energy[3];
         cityConsumption.water[3] += buildingsConsumption[i].dayCycle.water[3];
+
+       
     }
+
+    cityConsumption.totalEnergy = cityConsumption.energy[0] + cityConsumption.energy[1] + cityConsumption.energy[2] + cityConsumption.energy[3];
+    cityConsumption.totalWater = cityConsumption.water[0] + cityConsumption.water[1] + cityConsumption.water[2] + cityConsumption.water[3];
+    
     createChart();
 }
 
@@ -978,7 +984,7 @@ function calculateFlow(){
 
     let tb = Math.floor(2.6*tp);
     
-    let flowRate = (2 * (pe / 1000) * (71.8 * Math.pow(10, 6)))/( tb * 3600);
+    let flowRate = (2 * (pe / 1000) * (A * Math.pow(10, 6)))/( tb * 3600);
 
     let totalFlow = baseFlow + flowRate;
 
@@ -987,7 +993,10 @@ function calculateFlow(){
     let R = parseFloat(document.getElementById("r").value);
 
     let P = (E * ((totalFlow * R)*1000) * D)/100;
-   console.log(totalFlow * R, " ", P)
-}
+    console.log(Math.floor(((totalFlow * R)*1000)), " ", P);
 
-//71800000
+    flow = total - aguaconsumo - aguaenergia;
+
+    
+
+}

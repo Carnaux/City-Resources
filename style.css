@@ -39,6 +39,10 @@
     display: block;
 }
 
+#configs:hover #menu4{
+    display: block;
+}
+
 #menu1{
     position: absolute;
     top: 50px;
@@ -60,6 +64,15 @@
 #menu3{
     position: absolute;
     top: 150px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(235, 25, 225);
+    display: none;
+}
+
+#menu4{
+    position: absolute;
+    top: 200px;
     width: 50px;
     height: 50px;
     background-color: rgb(49, 235, 25);
@@ -85,6 +98,15 @@
     display: none;
 }
 
+#rainConfigs{
+    position: absolute;
+    left: 50px;
+    width: 200px;
+    height: 400px;
+    background-color: rgb(235, 25, 225);
+    display: none;
+}
+
 #menu1:hover #basinConfigs{
     display: block;
     /* width: 150px;
@@ -92,6 +114,12 @@
 }
 
 #menu2:hover #hydroConfigs{
+    display: block;
+    /* width: 150px;
+    height: 150px; */
+}
+
+#menu3:hover #rainConfigs{
     display: block;
     /* width: 150px;
     height: 150px; */

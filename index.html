@@ -20,32 +20,37 @@
                     <input id="h" type="number" value="220">
                     <br>
                     Hydrographic basin area (Km2):
-                    <input id="a" type="number" value="71800000">
+                    <input id="a" type="number" value="71.8">
                     <br>
                     River base flow rate (m3/s):
                     <input id="v" type="number" value="100">
                     <br>
-                    Effective precipitation (mm):
-                    <input id="pe" type="number" value="1">
-                    <br>
-                    Surface runoff:
-                    <input id="n" type="number" value="73">
+                   
                </div>
               
             </div>
             <div id="menu2">
                 <div id="hydroConfigs">
                     Hydroeletric efficiency:
-                    <input id="e" type="number" value="0.95">
+                    <input id="e" type="number" value="0.55">
                     <br>
                     Max diference of height on the river (m):
                     <input id="d" type="number" value="200">
                     <br>
                     Porcentage of the flow used in the turbines:
-                    <input id="r" type="number" value="0.15">
+                    <input id="r" type="number" value="0.015">
                 </div>
             </div>
-            <div id="menu3" onclick="calculateFlow()"></div>
+            <div id="menu3">
+                <div id="rainConfigs">
+                        Effective precipitation (mm):
+                        <input id="pe" type="number" value="1">
+                        <br>
+                        Surface runoff:
+                        <input id="n" type="number" value="73">
+                </div>
+            </div>
+            <div id="menu4" onclick="calculateFlow()"></div>
         </div>
     </div>
 
