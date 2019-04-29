@@ -8,3 +8,5 @@ http://hidro.gd/calculando-a-energia-gerada/
 https://www.slideshare.net/YaraNeves3/6-modelos-chuva-vazo-rubertoparte1
 
 http://www.evolvedoc.com.br/sbrh/detalhes-185_calibracao-de-um-modelo-hidrologico-tipo-chuva-vazao-para-bacia-hidrografica-do-rio-do-peixe
+
+http://www.deha.ufc.br/ticiana/Arquivos/Graduacao/Apostila_Hidrologia_grad/Cap_8_Escoamento_Superficial.pdf
