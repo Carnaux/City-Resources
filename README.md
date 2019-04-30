@@ -1,5 +1,9 @@
 ### CITY
 
+How it works
+
+
+References
 
 www.pha.poli.usp.br/LeArq.aspx?id_arq=7813
 
