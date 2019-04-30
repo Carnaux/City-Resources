@@ -75,7 +75,7 @@ importPrefabs();
 window.addEventListener( 'mousedown', onDocumentMouseDown, false );
 window.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
-var animate = function () {
+function animate() {
     requestAnimationFrame( animate );
 
     controls.update();
@@ -89,7 +89,7 @@ var animate = function () {
     }
 
     renderer.render( scene, camera );
-};
+}
 
 animate();
 
@@ -993,10 +993,18 @@ function calculateFlow(){
     let R = parseFloat(document.getElementById("r").value);
 
     let P = (E * ((totalFlow * R)*1000) * D)/100;
+
     console.log(Math.floor(((totalFlow * R)*1000)), " ", P);
 
-    flow = total - aguaconsumo - aguaenergia;
+    let aguaenergia = Math.floor((totalFlow * R));
 
+    //let aguaconsumo = 
+
+
+
+    //flow = total - aguaconsumo - aguaenergia; 
+
+    
     
 
 }

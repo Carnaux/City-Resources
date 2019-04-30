@@ -82,29 +82,42 @@
 
 #basinConfigs{
     position: absolute;
+    top: 0;
     left: 50px;
     width: 200px;
     height: 400px;
     background-color: rgb(200, 120, 90);
     display: none;
+
+    font-size: initial;
+    text-align: initial;
 }
 
 #hydroConfigs{
     position: absolute;
+    top: 0;
     left: 50px;
     width: 200px;
     height: 400px;
     background-color: rgb(195, 209, 68);
     display: none;
+
+    text-align: initial;
+    font-size: initial;
+    text-align: initial;
 }
 
 #rainConfigs{
     position: absolute;
+    top: 0;
     left: 50px;
     width: 200px;
     height: 400px;
     background-color: rgb(235, 25, 225);
     display: none;
+
+    font-size: initial;
+    text-align: initial;
 }
 
 #menu1:hover #basinConfigs{

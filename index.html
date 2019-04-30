@@ -6,13 +6,17 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>City</title>
 
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
 </head>
 <body style="margin: 0; overflow: hidden;">
-    <div id="configs">
+
+    
+    
+    <div id="configs" class="fas fa-cog" style="font-size: 30px; text-align: center;">
         <div id="menus">
-            <div id="menu1">
-               <div id="basinConfigs">
+            <div id="menu1" class="fas fa-mountain" style="font-size: 30px; text-align: center;">
+               <div id="basinConfigs" >
                     River lenght (Km):
                     <input id="l" type="number" value="21.5">
                     <br>
@@ -23,25 +27,24 @@
                     <input id="a" type="number" value="71.8">
                     <br>
                     River base flow rate (m3/s):
-                    <input id="v" type="number" value="100">
+                    <input id="v" type="number" value="30">
                     <br>
-                   
                </div>
               
             </div>
-            <div id="menu2">
+            <div id="menu2" class="fas fa-bolt" style="font-size: 30px; text-align: center;">
                 <div id="hydroConfigs">
                     Hydroeletric efficiency:
                     <input id="e" type="number" value="0.55">
                     <br>
                     Max diference of height on the river (m):
-                    <input id="d" type="number" value="200">
+                    <input id="d" type="number" value="100">
                     <br>
                     Porcentage of the flow used in the turbines:
                     <input id="r" type="number" value="0.015">
                 </div>
             </div>
-            <div id="menu3">
+            <div id="menu3" class="fas fa-cloud-rain" style="font-size: 30px; text-align: center;" >
                 <div id="rainConfigs">
                         Effective precipitation (mm):
                         <input id="pe" type="number" value="1">
