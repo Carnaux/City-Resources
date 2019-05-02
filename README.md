@@ -4,7 +4,7 @@ City Resources is a project made for a Statistics and Probability class.
 
 #### How it works
 
-This project generates a random city with 3 types of buildings, each building has its own random number and type of household goods and each household goods have a predefined consume of energy and/or water wich is used to calculate the total of energy and water consumed. Exemple:
+This project generates a random city with 3 types of buildings, each building has its own random number and type of household goods and each household goods have a predefined consume of energy and/or water wich is used to calculate the total of energy and water consumed in a day. Example:
 
 The code generated a house type 1:
 
@@ -19,7 +19,7 @@ The code generated a house type 1:
 
 and so on...
 
-After the code finish generating the city it uses default values to generate a river for producing energy and consumable water.
+When the code finish generating the city it uses default values to generate a rain/drought regime wich determines the energy and consumable water production. 
 
 
 References
