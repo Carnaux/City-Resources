@@ -43,6 +43,10 @@
     display: block;
 }
 
+#configs:hover #menu5{
+    display: block;
+}
+
 #menu1{
     position: absolute;
     top: 50px;
@@ -75,6 +79,16 @@
     top: 200px;
     width: 50px;
     height: 50px;
+    background-color: rgb(235, 125, 25);
+    display: none;
+}
+
+
+#menu5{
+    position: absolute;
+    top: 250px;
+    width: 50px;
+    height: 50px;
     background-color: rgb(49, 235, 25);
     display: none;
 }
@@ -104,6 +118,19 @@
 
     text-align: initial;
     font-size: initial;
+    
+}
+
+#waterConfigs{
+    position: absolute;
+    top: 0;
+    left: 50px;
+    width: 200px;
+    height: 400px;
+    background-color: rgb(235, 25, 225);
+    display: none;
+
+    font-size: initial;
     text-align: initial;
 }
 
@@ -111,9 +138,9 @@
     position: absolute;
     top: 0;
     left: 50px;
-    width: 200px;
-    height: 400px;
-    background-color: rgb(235, 25, 225);
+    width: 450px;
+    height: 200px;
+    background-color: rgb(235, 125, 25);
     display: none;
 
     font-size: initial;
@@ -132,7 +159,13 @@
     height: 150px; */
 }
 
-#menu3:hover #rainConfigs{
+#menu3:hover #waterConfigs{
+    display: block;
+    /* width: 150px;
+    height: 150px; */
+}
+
+#menu4:hover #rainConfigs{
     display: block;
     /* width: 150px;
     height: 150px; */

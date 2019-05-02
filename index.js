@@ -685,6 +685,51 @@ function createChart(){
             }
         }
     });
+
+
+
+
+
+    
+    var rain = document.getElementById('rainGraph').getContext('2d');
+    rainChart = new Chart(rain, {
+        // The type of chart we want to create
+        type: 'bar',
+
+        // The data for our dataset
+        data: {
+            labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
+            datasets: [{
+                label: "Energy (kW/h)",
+                backgroundColor: 'rgb(255, 99, 132)',
+                borderColor: 'rgb(255, 99, 132)',
+                data: [db.energy[0], db.energy[1], db.energy[2], db.energy[3], db.energy[0]]
+            },
+            {
+                label: "Water (L)",
+                backgroundColor: 'rgb(50, 50, 90)',
+                borderColor: 'rgb(50, 50, 90)',
+                data: [db.water[0], db.water[1], db.water[2], db.water[3], db.water[0]]
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }],
+                yAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }]
+            }
+        }
+    });
 }
 
 function sumObjs(obj){
@@ -998,8 +1043,10 @@ function calculateFlow(){
 
     let aguaenergia = Math.floor((totalFlow * R));
 
-    //let aguaconsumo = 
+    let W = parseFloat(document.getElementById("w").value);
 
+    //let aguaconsumo = 
+    console.log( "Flow: ", totalFlow, "energy: ", totalFlow * R, "water: ", totalFlow * W);
 
 
     //flow = total - aguaconsumo - aguaenergia; 
