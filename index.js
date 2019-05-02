@@ -23,7 +23,7 @@ let predioOutline;
 
 let lastHover;
 
-let chart;
+let chart, rainChart;
 
 let cityConsumption = {
     energy:[0,0,0,0],
@@ -686,11 +686,8 @@ function createChart(){
         }
     });
 
-
-
-
-
     
+
     var rain = document.getElementById('rainGraph').getContext('2d');
     rainChart = new Chart(rain, {
         // The type of chart we want to create
@@ -700,16 +697,10 @@ function createChart(){
         data: {
             labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
             datasets: [{
-                label: "Energy (kW/h)",
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 99, 132)',
-                data: [db.energy[0], db.energy[1], db.energy[2], db.energy[3], db.energy[0]]
-            },
-            {
-                label: "Water (L)",
+                label: "Rain (mm)",
                 backgroundColor: 'rgb(50, 50, 90)',
                 borderColor: 'rgb(50, 50, 90)',
-                data: [db.water[0], db.water[1], db.water[2], db.water[3], db.water[0]]
+                data: [100, 150, 250, 350, 350, 420, 410, 220, 100, 50, 20, 50]
             }]
         },
 
@@ -1051,7 +1042,21 @@ function calculateFlow(){
 
     //flow = total - aguaconsumo - aguaenergia; 
 
-    
-    
+    let jan = document.getElementById("jan").value;
+    let feb = document.getElementById("feb").value;
+    let mar = document.getElementById("mar").value;
+    let apr = document.getElementById("apr").value;
+    let may = document.getElementById("may").value;
+    let jun = document.getElementById("jun").value;
+    let jul = document.getElementById("jul").value;
+    let aug = document.getElementById("aug").value;
+    let sep = document.getElementById("sep").value;
+    let oct = document.getElementById("oct").value;
+    let nov = document.getElementById("nov").value;
+    let dec = document.getElementById("dec").value;
 
+    
+    
+    rainChart.config.data.datasets[0].data = [jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec];
+    rainChart.update();
 }
