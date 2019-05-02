@@ -23,7 +23,7 @@ let predioOutline;
 
 let lastHover;
 
-let chart, rainChart;
+let chart, rainChart, effectiveChart;
 
 let cityConsumption = {
     energy:[0,0,0,0],
@@ -588,6 +588,8 @@ function consumptionValues(){
 function generateConsumption(){
     for(let i = 0; i < buildingsTypes.length; i++){
 
+        
+
         useFrequency = randomizeUsage();
         let energy = generateEnergyGoods(buildingsTypes[i]);
         let water = generateWaterGoods(buildingsTypes[i], energy);
@@ -701,6 +703,40 @@ function createChart(){
                 backgroundColor: 'rgb(50, 50, 90)',
                 borderColor: 'rgb(50, 50, 90)',
                 data: [100, 150, 250, 350, 350, 420, 410, 220, 100, 50, 20, 50]
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }],
+                yAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }]
+            }
+        }
+    });
+
+    var rainE = document.getElementById('effectiveGraph').getContext('2d');
+    effectiveChart = new Chart(rainE, {
+        // The type of chart we want to create
+        type: 'bar',
+
+        // The data for our dataset
+        data: {
+            labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
+            datasets: [{
+                label: "Effective Rain (mm)",
+                backgroundColor: 'rgb(50, 50, 90)',
+                borderColor: 'rgb(50, 50, 90)',
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
             }]
         },
 
@@ -1011,6 +1047,7 @@ function calculateFlow(){
     let A = parseFloat(document.getElementById("a").value);
     let baseFlow = parseFloat(document.getElementById("v").value);
     let pe = parseFloat(document.getElementById("pe").value);
+    let N = parseFloat(document.getElementById("n").value);
 
     let tc = (57 *  Math.pow((Math.pow(L, 3) / H), 0.385))/60;
 
@@ -1042,21 +1079,30 @@ function calculateFlow(){
 
     //flow = total - aguaconsumo - aguaenergia; 
 
-    let jan = document.getElementById("jan").value;
-    let feb = document.getElementById("feb").value;
-    let mar = document.getElementById("mar").value;
-    let apr = document.getElementById("apr").value;
-    let may = document.getElementById("may").value;
-    let jun = document.getElementById("jun").value;
-    let jul = document.getElementById("jul").value;
-    let aug = document.getElementById("aug").value;
-    let sep = document.getElementById("sep").value;
-    let oct = document.getElementById("oct").value;
-    let nov = document.getElementById("nov").value;
-    let dec = document.getElementById("dec").value;
+    var months = document.getElementById("rainConfigs").getElementsByTagName("input"); 
 
-    
-    
-    rainChart.config.data.datasets[0].data = [jan,feb,mar,apr,may,jun,jul,aug,sep,oct,nov,dec];
+    rainChart.config.data.datasets[0].data = [months[0].value,months[1].value,months[2].value,months[3].value,
+                                              months[4].value,months[5].value,months[6].value,months[7].value,
+                                              months[8].value,months[9].value,months[10].value,months[11].value];
     rainChart.update();
+
+    let effectiveRain = [];
+    for(let i = 0; i < 12; i++){
+        let value = calculateEffectiveRain(months[i].value, N);
+        effectiveRain.push(value);
+    }
+
+    effectiveChart.config.data.datasets[0].data = [effectiveRain[0],effectiveRain[1],effectiveRain[2],effectiveRain[3],
+                                                   effectiveRain[4],effectiveRain[5],effectiveRain[6],effectiveRain[7],
+                                                   effectiveRain[8],effectiveRain[9],effectiveRain[10],effectiveRain[11]];
+
+}
+
+function calculateEffectiveRain(R, N){
+    let P = parseFloat(R)
+    let firstHalve = (P - 5080 / N + 50.8);
+    let secondHalve = (P + 20320 / N - 203.2);
+    let effective = Math.pow(firstHalve, 2) / secondHalve;
+
+    return effective;
 }

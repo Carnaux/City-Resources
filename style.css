@@ -139,7 +139,7 @@
     top: 0;
     left: 50px;
     width: 450px;
-    height: 250px;
+    height: 350px;
     background-color: rgb(235, 125, 25);
     display: none;
 
@@ -148,8 +148,8 @@
 }
 
 #rainConfigs input{
-   margin-right: 6px;
-    width: 20px;
+    margin-right: 6px;
+    width: 15px;
 }
 
 #jan{
