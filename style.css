@@ -98,58 +98,61 @@
     position: absolute;
     top: 0;
     left: 50px;
-    width: 200px;
-    height: 400px;
+    width: 500px;
+    height: 450px;
     background-color: rgb(200, 120, 90);
     display: none;
 
     font-size: initial;
     text-align: initial;
+    z-index: 30;
 }
 
 #hydroConfigs{
     position: absolute;
-    top: 0;
+    top: -50px;
     left: 50px;
-    width: 200px;
+    width: 500px;
     height: 400px;
     background-color: rgb(195, 209, 68);
     display: none;
 
     text-align: initial;
     font-size: initial;
-    
+    z-index: 30;
 }
 
 #waterConfigs{
     position: absolute;
-    top: 0;
+    top: -100px;
     left: 50px;
-    width: 200px;
-    height: 400px;
+    width: 500px;
+    height: 370px;
     background-color: rgb(235, 25, 225);
     display: none;
 
     font-size: initial;
     text-align: initial;
+    z-index: 30;
 }
 
 #rainConfigs{
     position: absolute;
-    top: 0;
+    top: -200px;
     left: 50px;
     width: 450px;
-    height: 350px;
+    height: 580px;
     background-color: rgb(235, 125, 25);
     display: none;
 
     font-size: initial;
     text-align: initial;
+    z-index: 30;
 }
 
 #rainConfigs input{
     margin-right: 6px;
-    width: 15px;
+    width: 30px;
 }
 
 #jan{
@@ -179,7 +182,30 @@
     /* width: 150px;
     height: 150px; */
 }
+#n{
+    width: 100px !important;
+}
 
+#riverFlow{
+    display: inline;
+   width: 150px;
+   height: 100px;
+}
+
+#effectiveGraph{
+    width: 150px;
+    height: 100px;
+}
+
+#rainGraph{
+    width: 150px;
+    height: 100px;
+}
+
+#energyProduction{
+    width: 150px;
+    height: 100px;
+}
 
 
 

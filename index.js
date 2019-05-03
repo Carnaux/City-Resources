@@ -23,7 +23,7 @@ let predioOutline;
 
 let lastHover;
 
-let chart, rainChart, effectiveChart;
+let chart, rainChart, effectiveChart, flowChart, energyChart;
 
 let cityConsumption = {
     energy:[0,0,0,0],
@@ -648,7 +648,7 @@ function createChart(){
     let db = cityConsumption;
 
     Chart.defaults.global.defaultFontColor = 'black';
-    var ctx = document.getElementById('myChart').getContext('2d');
+    let ctx = document.getElementById('myChart').getContext('2d');
     chart = new Chart(ctx, {
         // The type of chart we want to create
         type: 'line',
@@ -690,7 +690,7 @@ function createChart(){
 
     
 
-    var rain = document.getElementById('rainGraph').getContext('2d');
+    let rain = document.getElementById('rainGraph').getContext('2d');
     rainChart = new Chart(rain, {
         // The type of chart we want to create
         type: 'bar',
@@ -702,13 +702,13 @@ function createChart(){
                 label: "Rain (mm)",
                 backgroundColor: 'rgb(50, 50, 90)',
                 borderColor: 'rgb(50, 50, 90)',
-                data: [100, 150, 250, 350, 350, 420, 410, 220, 100, 50, 20, 50]
+                data: [50, 100, 190, 200, 170, 180, 170, 100, 60, 50, 20, 50]
             }]
         },
 
         // Configuration options go here
         options: {
-            maintainAspectRatio: false,
+           // maintainAspectRatio: false,
             scales: {
                 xAxes: [{
                     gridLines: {
@@ -724,7 +724,7 @@ function createChart(){
         }
     });
 
-    var rainE = document.getElementById('effectiveGraph').getContext('2d');
+    let rainE = document.getElementById('effectiveGraph').getContext('2d');
     effectiveChart = new Chart(rainE, {
         // The type of chart we want to create
         type: 'bar',
@@ -742,7 +742,7 @@ function createChart(){
 
         // Configuration options go here
         options: {
-            maintainAspectRatio: false,
+           
             scales: {
                 xAxes: [{
                     gridLines: {
@@ -757,6 +757,80 @@ function createChart(){
             }
         }
     });
+
+    let flowRiver = document.getElementById('riverFlow').getContext('2d');
+    flowChart = new Chart(flowRiver, {
+        // The type of chart we want to create
+        type: 'bar',
+
+        // The data for our dataset
+        data: {
+            labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
+            datasets: [{
+                label: "River Flow (m3/s)",
+                backgroundColor: 'rgb(50, 50, 90)',
+                borderColor: 'rgb(50, 50, 90)',
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+            //maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }],
+                yAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }]
+            }
+        }
+    });
+
+    let energyProduction = document.getElementById('energyProduction').getContext('2d');
+    energyChart = new Chart(energyProduction, {
+        // The type of chart we want to create
+        type: 'bar',
+
+        // The data for our dataset
+        data: {
+            labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
+            datasets: [{
+                label: "Energy Produced (kW/h)",
+                backgroundColor: 'rgb(50, 50, 90)',
+                borderColor: 'rgb(50, 50, 90)',
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+            //maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }],
+                yAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }]
+            }
+        }
+    });
+
+    //chart.update();
+    rainChart.update();
+    effectiveChart.update();
+    flowChart.update();
+    energyChart.update();
 }
 
 function sumObjs(obj){
@@ -1006,47 +1080,43 @@ function onDocumentMouseMove(e) {
   
     let raycaster = new THREE.Raycaster();
     raycaster.setFromCamera(mouse, camera);
-  
+    
     let intersects = raycaster.intersectObjects(buildingsMeshes);
-
-    if(intersects.length > 0){
-        for(let i = 0; i < buildingsMeshes.length; i++){
-            if(intersects[0].object.id == buildingsMeshes[i].id){
-                if(buildingsTypes[i] == 0){
-                    lastHover = house1Outline;
-                    lastHover.visible = true;
-                    lastHover.position.copy(buildingsMeshes[i].position);
-                    lastHover.rotation.copy(buildingsMeshes[i].rotation);
-                }else if(buildingsTypes[i] == 1){
-                    lastHover = house2Outline;
-                    lastHover.visible = true;
-                    lastHover.position.copy(buildingsMeshes[i].position);
-                    lastHover.rotation.copy(buildingsMeshes[i].rotation);
-                }else if(buildingsTypes[i] == 2){
-                    lastHover = predioOutline;
-                    lastHover.visible = true;
-                    lastHover.position.copy(buildingsMeshes[i].position);
-                    lastHover.rotation.copy(buildingsMeshes[i].rotation);
+    if(e.path[1].id == "renderDiv"){
+        if(intersects.length > 0){
+            for(let i = 0; i < buildingsMeshes.length; i++){
+                if(intersects[0].object.id == buildingsMeshes[i].id){
+                    if(buildingsTypes[i] == 0){
+                        lastHover = house1Outline;
+                        lastHover.visible = true;
+                        lastHover.position.copy(buildingsMeshes[i].position);
+                        lastHover.rotation.copy(buildingsMeshes[i].rotation);
+                    }else if(buildingsTypes[i] == 1){
+                        lastHover = house2Outline;
+                        lastHover.visible = true;
+                        lastHover.position.copy(buildingsMeshes[i].position);
+                        lastHover.rotation.copy(buildingsMeshes[i].rotation);
+                    }else if(buildingsTypes[i] == 2){
+                        lastHover = predioOutline;
+                        lastHover.visible = true;
+                        lastHover.position.copy(buildingsMeshes[i].position);
+                        lastHover.rotation.copy(buildingsMeshes[i].rotation);
+                    }
                 }
             }
-        }
-    }else{
-        if(lastHover != null){
-            lastHover.visible = false;
+        }else{
+            if(lastHover != null){
+                lastHover.visible = false;
+            }
         }
     }
 }
 
-function simulate(){
-    
-}
-
-function calculateFlow(){
+function calculateData(){
     let L = parseFloat(document.getElementById("l").value);
     let H = parseFloat(document.getElementById("h").value);
     let A = parseFloat(document.getElementById("a").value);
     let baseFlow = parseFloat(document.getElementById("v").value);
-    let pe = parseFloat(document.getElementById("pe").value);
     let N = parseFloat(document.getElementById("n").value);
 
     let tc = (57 *  Math.pow((Math.pow(L, 3) / H), 0.385))/60;
@@ -1057,27 +1127,18 @@ function calculateFlow(){
 
     let tb = Math.floor(2.6*tp);
     
-    let flowRate = (2 * (pe / 1000) * (A * Math.pow(10, 6)))/( tb * 3600);
-
-    let totalFlow = baseFlow + flowRate;
 
     let E =  parseFloat(document.getElementById("e").value);
     let D = parseFloat(document.getElementById("d").value);
     let R = parseFloat(document.getElementById("r").value);
 
-    let P = (E * ((totalFlow * R)*1000) * D)/100;
+    
 
-    console.log(Math.floor(((totalFlow * R)*1000)), " ", P);
+    //console.log(Math.floor(((totalFlow * R)*1000)), " ", P);
 
-    let aguaenergia = Math.floor((totalFlow * R));
+    //let aguaenergia = Math.floor((totalFlow * R));
 
     let W = parseFloat(document.getElementById("w").value);
-
-    //let aguaconsumo = 
-    console.log( "Flow: ", totalFlow, "energy: ", totalFlow * R, "water: ", totalFlow * W);
-
-
-    //flow = total - aguaconsumo - aguaenergia; 
 
     var months = document.getElementById("rainConfigs").getElementsByTagName("input"); 
 
@@ -1087,15 +1148,32 @@ function calculateFlow(){
     rainChart.update();
 
     let effectiveRain = [];
+    let riverFlow = [];
+    let energyArr = [];
     for(let i = 0; i < 12; i++){
         let value = calculateEffectiveRain(months[i].value, N);
+        let flow = calculateRiverFlow(value, A, tb);
+        let energyGenerated = calculateEnergy(E, baseFlow + flow, R, D);
         effectiveRain.push(value);
+        riverFlow.push( baseFlow + flow);
+        energyArr.push(energyGenerated);
     }
 
     effectiveChart.config.data.datasets[0].data = [effectiveRain[0],effectiveRain[1],effectiveRain[2],effectiveRain[3],
                                                    effectiveRain[4],effectiveRain[5],effectiveRain[6],effectiveRain[7],
                                                    effectiveRain[8],effectiveRain[9],effectiveRain[10],effectiveRain[11]];
+    effectiveChart.update();
 
+
+    flowChart.config.data.datasets[0].data = [riverFlow[0],riverFlow[1],riverFlow[2],riverFlow[3],
+                                                   riverFlow[4],riverFlow[5],riverFlow[6],riverFlow[7],
+                                                   riverFlow[8],riverFlow[9],riverFlow[10],riverFlow[11]];
+    flowChart.update();
+
+    energyChart.config.data.datasets[0].data = [energyArr[0],energyArr[1],energyArr[2],energyArr[3],
+                                                   energyArr[4],energyArr[5],energyArr[6],energyArr[7],
+                                                   energyArr[8],energyArr[9],energyArr[10],energyArr[11]];
+    energyChart.update();
 }
 
 function calculateEffectiveRain(R, N){
@@ -1104,5 +1182,15 @@ function calculateEffectiveRain(R, N){
     let secondHalve = (P + 20320 / N - 203.2);
     let effective = Math.pow(firstHalve, 2) / secondHalve;
 
-    return effective;
+    return Math.floor(effective);
+}
+
+function calculateRiverFlow(pe, a, t){
+    let flowRate = (2 * (pe / 1000) * (a * Math.pow(10, 6)))/( t * 3600);
+    return Math.floor(flowRate);
+}
+
+function calculateEnergy(e, f, p, d){
+    let P = (e * ((f * p)*1000) * d)/100;
+    return P;
 }
