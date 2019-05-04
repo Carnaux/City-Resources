@@ -1,3 +1,8 @@
+#peopleDiv{
+    position: absolute;
+    top: 0;
+    left: 100px;
+}
 #menu{
     position: absolute;
     top: 0;
@@ -42,8 +47,11 @@
 #configs:hover #menu4{
     display: block;
 }
-
 #configs:hover #menu5{
+    display: block;
+}
+
+#configs:hover #applyBt{
     display: block;
 }
 
@@ -83,15 +91,24 @@
     display: none;
 }
 
-
 #menu5{
     position: absolute;
     top: 250px;
     width: 50px;
     height: 50px;
+    background-color: rgb(235, 125, 25);
+    display: none;
+}
+
+#applyBt{
+    position: absolute;
+    top: 300px;
+    width: 50px;
+    height: 50px;
     background-color: rgb(49, 235, 25);
     display: none;
 }
+
 
 
 #basinConfigs{
@@ -150,6 +167,21 @@
     z-index: 30;
 }
 
+#popData{
+    position: absolute;
+    top: -200px;
+    left: 50px;
+    width: 450px;
+    height: 580px;
+    background-color: rgb(235, 125, 25);
+    display: none;
+
+    font-size: initial;
+    text-align: initial;
+    z-index: 30;
+}
+
+
 #rainConfigs input{
     margin-right: 6px;
     width: 30px;
@@ -186,6 +218,10 @@
     width: 100px !important;
 }
 
+#menu5:hover #popData{
+    display: block;
+}
+
 #riverFlow{
     display: inline;
    width: 150px;
@@ -204,6 +240,16 @@
 
 #energyProduction{
     width: 150px;
+    height: 100px;
+}
+
+#waterProduction{
+    width: 150px;
+    height: 100px;
+}
+
+#popChart{
+    width: 50px;
     height: 100px;
 }
 

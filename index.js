@@ -23,11 +23,12 @@ let predioOutline;
 
 let lastHover;
 
-let chart, rainChart, effectiveChart, flowChart, energyChart;
+let chart, rainChart, effectiveChart, flowChart, energyChart, waterChart, popChart;
 
 let cityConsumption = {
     energy:[0,0,0,0],
     water: [0,0,0,0],
+    people: 0,
     totalEnergy: 0,
     totalWater: 0
 };
@@ -565,7 +566,7 @@ function consumptionValues(){
     
     consumptionTable = {
         energy:{
-            shower: 5500, 
+            shower: 1350, 
             lamp: 9,
             freezer: 500,
             dish: 1500,
@@ -574,8 +575,8 @@ function consumptionValues(){
             tv: 90
         },
         water:{
-            sink: 1,
-            shower: 40,
+            sink: 1.5,
+            shower: 90,
             toilet: 4,
             washer: 8.4,
             dish: 15,
@@ -588,9 +589,8 @@ function consumptionValues(){
 function generateConsumption(){
     for(let i = 0; i < buildingsTypes.length; i++){
 
-        
-
-        useFrequency = randomizeUsage();
+        let people = generatePeople(buildingsTypes[i]);
+        useFrequency = randomizeUsage(people);
         let energy = generateEnergyGoods(buildingsTypes[i]);
         let water = generateWaterGoods(buildingsTypes[i], energy);
         let energyConsumption = generateEnergyConsumption(energy, useFrequency);
@@ -599,10 +599,11 @@ function generateConsumption(){
         let energyTotal = Math.floor(sumObjs(energyConsumption));
         let waterTotal =  Math.floor(sumObjs(waterConsumption));
         
-       let distribution = distributeEnergy(energyTotal, waterTotal);
+        let distribution = distributeEnergy(energyTotal, waterTotal);
 
         let houseStats = {
             dayCycle: distribution,
+            people: people,
             energy: {
                 quantity: energy,
                 consumption: energyConsumption
@@ -621,24 +622,26 @@ function generateConsumption(){
 }
 
 function calculateTotal(){
-    for(let i = 0; i < 4; i++){
-        cityConsumption.energy[0] += buildingsConsumption[i].dayCycle.energy[0];
-        cityConsumption.water[0] += buildingsConsumption[i].dayCycle.water[0];
+    for(let i = 0; i < buildingsConsumption.length; i++){
+        cityConsumption.energy[0] += Math.floor(buildingsConsumption[i].dayCycle.energy[0]);
+        cityConsumption.water[0] += Math.floor(buildingsConsumption[i].dayCycle.water[0]);
 
-        cityConsumption.energy[1] += buildingsConsumption[i].dayCycle.energy[1];
-        cityConsumption.water[1] += buildingsConsumption[i].dayCycle.water[1];
+        cityConsumption.energy[1] += Math.floor(buildingsConsumption[i].dayCycle.energy[1]);
+        cityConsumption.water[1] += Math.floor(buildingsConsumption[i].dayCycle.water[1]);
 
-        cityConsumption.energy[2] += buildingsConsumption[i].dayCycle.energy[2];
-        cityConsumption.water[2] += buildingsConsumption[i].dayCycle.water[2];
+        cityConsumption.energy[2] += Math.floor(buildingsConsumption[i].dayCycle.energy[2]);
+        cityConsumption.water[2] += Math.floor(buildingsConsumption[i].dayCycle.water[2]);
 
-        cityConsumption.energy[3] += buildingsConsumption[i].dayCycle.energy[3];
-        cityConsumption.water[3] += buildingsConsumption[i].dayCycle.water[3];
+        cityConsumption.energy[3] += Math.floor(buildingsConsumption[i].dayCycle.energy[3]);
+        cityConsumption.water[3] += Math.floor(buildingsConsumption[i].dayCycle.water[3]);
 
-       
+        cityConsumption.people += buildingsConsumption[i].people;
     }
 
     cityConsumption.totalEnergy = cityConsumption.energy[0] + cityConsumption.energy[1] + cityConsumption.energy[2] + cityConsumption.energy[3];
     cityConsumption.totalWater = cityConsumption.water[0] + cityConsumption.water[1] + cityConsumption.water[2] + cityConsumption.water[3];
+    
+
     
     createChart();
 }
@@ -826,6 +829,41 @@ function createChart(){
         }
     });
 
+    let waterProduction = document.getElementById('waterProduction').getContext('2d');
+    waterChart = new Chart(waterProduction, {
+        // The type of chart we want to create
+        type: 'bar',
+
+        // The data for our dataset
+        data: {
+            labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
+            datasets: [{
+                label: "Water Produced (m3/s)",
+                backgroundColor: 'rgb(50, 50, 90)',
+                borderColor: 'rgb(50, 50, 90)',
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+            //maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }],
+                yAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }]
+            }
+        }
+    });
+
+
     //chart.update();
     rainChart.update();
     effectiveChart.update();
@@ -837,10 +875,20 @@ function sumObjs(obj){
     return Object.values(obj).reduce((a, b) => a + b);  
 }
 
+function generatePeople(type){
+    if(type == 0){
+        return Math.floor(Math.random() * (6 - 1)) + 1;
+    }else if(type == 1){
+        return Math.floor(Math.random() * (7 - 3) ) + 3;
+    }else if(type == 2){
+        return Math.floor(Math.random() * (101 - 20) ) + 20;
+    }
+}
+
 function generateEnergyGoods(type){
     if(type == 0){
         energyGoods = {
-            lamp: Math.floor(Math.random() * 14) + 4,
+            lamp: Math.floor(Math.random() * (14 - 4)) + 4,
             shower: 1,
             freezer: 1,
             dish: Math.floor(Math.random() * 2),
@@ -852,7 +900,7 @@ function generateEnergyGoods(type){
         return energyGoods;
     }else if( type == 1){
         energyGoods = {
-            lamp: Math.floor(Math.random() * 26) + 8,
+            lamp: Math.floor(Math.random() * (26 - 8)) + 8,
             shower: Math.floor(Math.random() * 2) + 1,
             freezer: 1,
             dish: Math.floor(Math.random() * 2),
@@ -864,7 +912,7 @@ function generateEnergyGoods(type){
         return energyGoods;
     }else if( type == 2){
         energyGoods = {
-            lamp: Math.floor(Math.random() * 300) + 80,
+            lamp: Math.floor(Math.random() * (300 - 80)) + 80,
             shower: 20,
             freezer: 20,
             dish: Math.floor(Math.random() * 20),
@@ -939,19 +987,38 @@ function generateWaterConsumption(water, f){
     return tempObj;
 }
 
-function randomizeUsage(){
-    let tempObj = {
-        lamp: Math.floor(Math.random() * 21),
-        shower:  Math.floor(Math.random() * 7),
-        dish: Math.floor(Math.random() * 11),
-        tv: Math.floor(Math.random() * 21),
-        washer: Math.floor(Math.random() * 3),
-        dryer: Math.floor(Math.random() * 7),
-        toilet: Math.floor(Math.random() * 10),
-        sink: Math.floor(Math.random() * 16),
-    }
+function randomizeUsage(p, type){
 
-    return tempObj;
+    if(type != 2){
+
+        let tempObj = {
+            lamp: Math.floor(Math.random() * 21),
+            shower: p * (Math.floor(Math.random() * 3) + 1),
+            dish: Math.floor(Math.random() * 4),
+            tv: Math.floor(Math.random() * 21),
+            washer: Math.floor(Math.random() * 3),
+            dryer: Math.floor(Math.random() * 3),
+            toilet: p * Math.floor(Math.random() * 10) ,
+            sink: p * Math.floor(Math.random() * 26),
+        }
+
+        return tempObj;
+    }else{
+
+        let tempObj = {
+            lamp: Math.floor(Math.random() * 21),
+            shower: p * (Math.floor(Math.random() * 3) + 1),
+            dish: Math.floor(Math.random() * 4),
+            tv: Math.floor(Math.random() * 21),
+            washer: Math.floor(Math.random() * 3),
+            dryer: Math.floor(Math.random() * 3),
+            toilet: p * Math.floor(Math.random() * 10) ,
+            sink: p * Math.floor(Math.random() * 26),
+        }
+
+        return tempObj;
+    }
+   
 }
 
 function distributeEnergy(eT, wT){
@@ -1118,6 +1185,7 @@ function calculateData(){
     let A = parseFloat(document.getElementById("a").value);
     let baseFlow = parseFloat(document.getElementById("v").value);
     let N = parseFloat(document.getElementById("n").value);
+    let C = parseFloat(document.getElementById("cf").value);
 
     let tc = (57 *  Math.pow((Math.pow(L, 3) / H), 0.385))/60;
 
@@ -1132,14 +1200,6 @@ function calculateData(){
     let D = parseFloat(document.getElementById("d").value);
     let R = parseFloat(document.getElementById("r").value);
 
-    
-
-    //console.log(Math.floor(((totalFlow * R)*1000)), " ", P);
-
-    //let aguaenergia = Math.floor((totalFlow * R));
-
-    let W = parseFloat(document.getElementById("w").value);
-
     var months = document.getElementById("rainConfigs").getElementsByTagName("input"); 
 
     rainChart.config.data.datasets[0].data = [months[0].value,months[1].value,months[2].value,months[3].value,
@@ -1150,13 +1210,16 @@ function calculateData(){
     let effectiveRain = [];
     let riverFlow = [];
     let energyArr = [];
+    
     for(let i = 0; i < 12; i++){
         let value = calculateEffectiveRain(months[i].value, N);
         let flow = calculateRiverFlow(value, A, tb);
-        let energyGenerated = calculateEnergy(E, baseFlow + flow, R, D);
+        let energyGenerated = calculateEnergy(E, baseFlow + flow, R, D, C);
+        
         effectiveRain.push(value);
         riverFlow.push( baseFlow + flow);
         energyArr.push(energyGenerated);
+    
     }
 
     effectiveChart.config.data.datasets[0].data = [effectiveRain[0],effectiveRain[1],effectiveRain[2],effectiveRain[3],
@@ -1174,6 +1237,11 @@ function calculateData(){
                                                    energyArr[4],energyArr[5],energyArr[6],energyArr[7],
                                                    energyArr[8],energyArr[9],energyArr[10],energyArr[11]];
     energyChart.update();
+
+    // waterChart.config.data.datasets[0].data = [waterArr[0],waterArr[1],waterArr[2],waterArr[3],
+    //                                                waterArr[4],waterArr[5],waterArr[6],waterArr[7],
+    //                                                waterArr[8],waterArr[9],waterArr[10],waterArr[11]];
+    // waterChart.update();
 }
 
 function calculateEffectiveRain(R, N){
@@ -1190,7 +1258,28 @@ function calculateRiverFlow(pe, a, t){
     return Math.floor(flowRate);
 }
 
-function calculateEnergy(e, f, p, d){
+function calculateEnergy(e, f, p, d, c){
     let P = (e * ((f * p)*1000) * d)/100;
-    return P;
+    let Em = 730 * P * (c/100);
+    return Math.floor(Em);
+}
+
+function calculateWater(){
+    let k1 = parseFloat(document.getElementById("k1").value);
+    let k2 = parseFloat(document.getElementById("k2").value);
+    let t = parseFloat(document.getElementById("wt").value);
+    let wc = parseFloat(document.getElementById("wc").value);
+
+    let P = cityConsumption.people;
+    let q = cityConsumption.totalWater/cityConsumption.people;
+
+    let Q = k1 * k2 * ((P * q)/86400);
+
+    let qProduction = ((Q * k1 * 24)/t) * (1 + (wc/100));
+
+    let qDistribution = (Q * k1 * k2);
+    
+    
+  
+    return qDistribution/12;
 }

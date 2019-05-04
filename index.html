@@ -10,8 +10,6 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body style="margin: 0; overflow: hidden;">
-
-    
     
     <div id="configs" class="fas fa-cog" style="font-size: 30px; text-align: center;">
         <div id="menus">
@@ -41,11 +39,15 @@
                 <div id="hydroConfigs">
                     Hydroeletric efficiency:
                     <br>
-                    <input id="e" type="number" value="0.55">
+                    <input id="e" type="number" value="0.45">
                     <br>
-                    Max diference of height on the river (m):
+                    Difference of height (m):
                     <br>
-                    <input id="d" type="number" value="100">
+                    <input id="d" type="number" value="50">
+                    <br>
+                    Capacity factor:
+                    <br>
+                    <input id="cf" type="number" value="90">
                     <br>
                     Percentage of the flow used in the turbines:
                     <br>
@@ -56,10 +58,23 @@
             </div>
             <div id="menu3" class="fas fa-water" style="font-size: 30px; text-align: center;" >
                 <div id="waterConfigs">
-                        Percentage of the flow used to produce water:
-                        <br>
-                        <input id="w" type="number" value="0.02">
-                       
+                    Coefficient of the day of greatest consumption (k1):
+                    <br>
+                    <input id="k1" type="number" value="1.2">
+                    <br>
+                    Coefficient of the hour of greatest consumption (k2):
+                    <br>
+                    <input id="k2" type="number" value="1.5">
+                    <br>
+                    Hours of production: 
+                    <br>
+                    <input id="wt" type="number" value="16">
+                    <br>
+                    Water consume on the treatment station (%): 
+                    <br>
+                    <input id="wc" type="number" value="3">
+                    <br>
+                    <canvas id="waterProduction"></canvas>
 
                         
                 </div>
@@ -104,7 +119,12 @@
                         <canvas id="effectiveGraph"></canvas>
                     </div>
             </div>
-            <div id="menu5" onclick="calculateData()"></div>
+            <div id="menu5" class="fas fa-home" style="font-size: 30px; text-align: center;" >
+                <div id="popData">
+                    <canvas id="popChart"></canvas>
+                </div>
+            </div>
+            <div id="applyBt" onclick="calculateData()"></div>
         </div>
     </div>
 
