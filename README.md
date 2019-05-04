@@ -39,3 +39,5 @@ https://capacitacao.ead.unesp.br/dspace/bitstream/ana/66/2/Unidade_1.pdf
 https://www.usbr.gov/power/edu/pamphlet.pdf
 
 https://www.guiadaengenharia.com/dimensionamento-de-uma-eta/
+
+http://www.ufrrj.br/institutos/it/deng/leonardo/downloads/APOSTILA/Apostila%20IT%20179/Cap%204%20parte%201.pdf
