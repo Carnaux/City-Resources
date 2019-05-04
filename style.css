@@ -96,7 +96,7 @@
     top: 250px;
     width: 50px;
     height: 50px;
-    background-color: rgb(235, 125, 25);
+    background-color: rgb(14, 161, 149);
     display: none;
 }
 
@@ -173,7 +173,7 @@
     left: 50px;
     width: 450px;
     height: 580px;
-    background-color: rgb(235, 125, 25);
+    background-color: rgb(14, 161, 149);
     display: none;
 
     font-size: initial;
