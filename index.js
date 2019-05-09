@@ -613,10 +613,12 @@ function generateConsumption(){
             dayCycle: distribution,
             people: people,
             energy: {
+                total: energyTotal,
                 quantity: energy,
                 consumption: energyConsumption
             },
             water: {
+                total: waterTotal,
                 quantity: water,
                 consumption: waterConsumption
             },
@@ -648,52 +650,37 @@ function calculateTotal(){
         cityConsumption.people += buildingsConsumption[i].people;
     }
 
-    console.log("People: ", cityConsumption.people);
-
     cityConsumption.totalEnergy = cityConsumption.energy[0] + cityConsumption.energy[1] + cityConsumption.energy[2] + cityConsumption.energy[3];
     cityConsumption.totalWater = cityConsumption.water[0] + cityConsumption.water[1] + cityConsumption.water[2] + cityConsumption.water[3];
 
-    for(let i = 0; i < buildingsConsumption.length; i++){
-        let year = simulateYear(buildingsConsumption[i]);
-        buildingsConsumptionAnnual.push(year);
-    }
-    
 
-    //REVISAR CALCULOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
     let days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    let tempIndex = 0;
-    
-    for(let i = 0; i < 12; i++){
-        let tempEnergy = 0;
-        let tempWater = 0;
-        for(let j = 0; j < buildingsConsumptionAnnual.length; j++){
-            let auxIndex = 0;
-            for(let k = tempIndex; k < buildingsConsumptionAnnual[j].length; k++){
-                if(auxIndex == days[i]){
-                   
-                    break;
-                }else{
-                
-                    auxIndex++;
-                    let synt = buildingsConsumptionAnnual[j][k].dayCycle;
-                    let totalEnergy = synt.energy[0] + synt.energy[1] + synt.energy[2] + synt.energy[3];
-                    let totalWater = synt.water[0] + synt.water[1] + synt.water[2] + synt.water[3];
-                    tempEnergy += totalEnergy;
-                    tempWater += totalWater;
-                }
-            }
+
+    for(let i = 0; i < days.length; i++){
+        let monthTotal = {
+            energy: 0,
+            water: 0
         }
-        tempIndex += days[i];
-        annualCityConsumption.energy[i] = Math.floor(tempEnergy);
-        annualCityConsumption.water[i] = Math.floor(tempWater);
-
-        annualCityConsumption.totalEnergy += Math.floor(tempEnergy);
-        annualCityConsumption.totalWater += Math.floor(tempWater);
-
-    }
-    console.log(buildingsConsumptionAnnual)
-    console.log(annualCityConsumption);
+        for(let j = 0; j < buildingsConsumption.length; j++){
+        
+            let b = buildingsConsumption[j];
     
+            useFrequency = randomizeUsage(b.people);
+            let energyConsumption = generateEnergyConsumption(b.energy.quantity, useFrequency, days[i]);
+            let waterConsumption = generateWaterConsumption(b.water.quantity, useFrequency, days[i]);
+    
+            let energyTotal = Math.floor(sumObjs(energyConsumption));
+            let waterTotal =  Math.floor(sumObjs(waterConsumption));
+    
+            monthTotal.energy += energyTotal;
+            monthTotal.water += waterTotal;
+    
+        }
+        annualCityConsumption.energy[i] = monthTotal.energy;
+        annualCityConsumption.water[i] = monthTotal.water;
+        console.log(monthTotal)
+    }
+
     createChart();
 }
 
@@ -711,7 +698,7 @@ function createChart(){
         data: {
             labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
             datasets: [{
-                label: "Energy (gW/h / 10^6)",
+                label: "Energy (GW/h)",
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: [db.energy[0]/Math.pow(10, 6), db.energy[1]/Math.pow(10, 6), db.energy[2]/Math.pow(10, 6),
@@ -720,7 +707,7 @@ function createChart(){
                        db.energy[9]/Math.pow(10, 6), db.energy[10/Math.pow(10, 6)], db.energy[11/Math.pow(10, 6)]]
             },
             {
-                label: "Water (L / 10^9)",
+                label: "Water (L /10^9)",
                 backgroundColor: 'rgb(50, 50, 90)',
                 borderColor: 'rgb(50, 50, 90)',
                 data: [db.water[0]/Math.pow(10,9), db.water[1]/Math.pow(10,9), db.water[2]/Math.pow(10,9),
@@ -1019,27 +1006,38 @@ function generateWaterGoods(type, energy){
 
 }
 
-function generateEnergyConsumption(energy, f){
+function generateEnergyConsumption(energy, f, days){
+    let d = 1;
+    if(days != null){
+        d = days;
+    }
+
     let tempObj = {
-        lamp: (energy.lamp * consumptionTable.energy.lamp * f.lamp)/1000,
-        shower: (energy.shower * consumptionTable.energy.shower * f.shower)/1000,
-        freezer: (energy.freezer * consumptionTable.energy.freezer * 10)/1000,
-        dish: (energy.dish * consumptionTable.energy.dish * f.dish)/1000,
-        tv: (energy.tv * consumptionTable.energy.tv * f.tv)/1000,
-        washer: (energy.washer * consumptionTable.energy.washer * f.washer)/1000,
-        dryer: (energy.dryer * consumptionTable.energy.dryer * f.dryer)/1000,
+        lamp: (energy.lamp * consumptionTable.energy.lamp * f.lamp * d)/1000,
+        shower: (energy.shower * consumptionTable.energy.shower * f.shower * d)/1000,
+        freezer: (energy.freezer * consumptionTable.energy.freezer * 10 * d)/1000,
+        dish: (energy.dish * consumptionTable.energy.dish * f.dish * d)/1000,
+        tv: (energy.tv * consumptionTable.energy.tv * f.tv * d)/1000,
+        washer: (energy.washer * consumptionTable.energy.washer * f.washer * d)/1000,
+        dryer: (energy.dryer * consumptionTable.energy.dryer * f.dryer * d)/1000,
     }
 
     return tempObj;
 }
 
-function generateWaterConsumption(water, f){
+function generateWaterConsumption(water, f, days){
+    let d = 1;
+    if(days != null){
+        d = days;
+    }
+
+
     let tempObj = {
-        sink: (water.sink * consumptionTable.water.sink * f.sink),
-        toilet: (water.toilet * consumptionTable.water.toilet * f.toilet),
-        shower: (water.shower * consumptionTable.water.shower * f.shower),
-        dish: (water.dish * consumptionTable.water.dish * f.dish),
-        washer: (water.washer * consumptionTable.water.washer * f.washer),
+        sink: (water.sink * consumptionTable.water.sink * f.sink * d),
+        toilet: (water.toilet * consumptionTable.water.toilet * f.toilet * d),
+        shower: (water.shower * consumptionTable.water.shower * f.shower * d),
+        dish: (water.dish * consumptionTable.water.dish * f.dish * d),
+        washer: (water.washer * consumptionTable.water.washer * f.washer * d),
     }
 
     return tempObj;
@@ -1325,36 +1323,4 @@ function calculateWater(){
     
   
     return qDistribution/12;
-}
-
-function simulateYear(b){
-    let tempArr = [];
-    tempArr.push(b);
-    for(let j = 0; j < 364; j++){
-        
-        useFrequency = randomizeUsage(b.people);
-        let energyConsumption = generateEnergyConsumption(b.energy.quantity, useFrequency);
-        console.log(energyConsumption)
-        let waterConsumption = generateWaterConsumption(b.water.quantity, useFrequency);
-
-        let energyTotal = Math.floor(sumObjs(energyConsumption));
-        let waterTotal =  Math.floor(sumObjs(waterConsumption));
-        
-        let distribution = distributeEnergy(energyTotal, waterTotal);
-
-        let houseStats = {
-            dayCycle: distribution,
-            energy: {
-                consumption: energyConsumption
-            },
-            water: {
-                consumption: waterConsumption
-            },
-            frequency: useFrequency,
-        }
-
-        tempArr.push(houseStats);
-    }
-
-    return tempArr;
 }
