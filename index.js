@@ -660,14 +660,19 @@ function calculateTotal(){
     
     let days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     let tempIndex = 0;
+    
     for(let i = 0; i < 12; i++){
         let tempEnergy = 0;
         let tempWater = 0;
         for(let j = 0; j < buildingsConsumptionAnnual.length; j++){
+            let auxIndex = 0;
             for(let k = tempIndex; k < buildingsConsumptionAnnual[j].length; k++){
-                if(k == days[i]){
+                if(auxIndex == days[i]){
+                   
                     break;
                 }else{
+                
+                    auxIndex++;
                     let synt = buildingsConsumptionAnnual[j][k].dayCycle;
                     let totalEnergy = synt.energy[0] + synt.energy[1] + synt.energy[2] + synt.energy[3];
                     let totalWater = synt.water[0] + synt.water[1] + synt.water[2] + synt.water[3];
@@ -684,7 +689,8 @@ function calculateTotal(){
         annualCityConsumption.totalWater += Math.floor(tempWater);
 
     }
-    console.log(buildingsConsumptionAnnual[0]);
+    console.log(buildingsConsumptionAnnual)
+    console.log(annualCityConsumption);
     
     createChart();
 }
@@ -703,7 +709,7 @@ function createChart(){
         data: {
             labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
             datasets: [{
-                label: "Energy (tW/h / 10^6)",
+                label: "Energy (gW/h / 10^6)",
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
                 data: [db.energy[0]/Math.pow(10, 6), db.energy[1]/Math.pow(10, 6), db.energy[2]/Math.pow(10, 6),
