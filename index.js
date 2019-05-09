@@ -658,6 +658,8 @@ function calculateTotal(){
         buildingsConsumptionAnnual.push(year);
     }
     
+
+    //REVISAR CALCULOSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS
     let days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     let tempIndex = 0;
     
@@ -1332,6 +1334,7 @@ function simulateYear(b){
         
         useFrequency = randomizeUsage(b.people);
         let energyConsumption = generateEnergyConsumption(b.energy.quantity, useFrequency);
+        console.log(energyConsumption)
         let waterConsumption = generateWaterConsumption(b.water.quantity, useFrequency);
 
         let energyTotal = Math.floor(sumObjs(energyConsumption));
