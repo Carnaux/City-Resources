@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>City Resources</title>
+
+
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body style="overflow-x:hidden;">
+    <div id="sideMenubg"></div>
+    <div id="sideMenu">
+        <a href="#intro">Intro</a>
+        <a href="#city">The City</a>
+        <a href="#references">references</a>
+        
+    </div>
+   
+    
+    
+    <div id="content">
+        <a href="intro"></a>
+        <div id="intro">
+            
+            <p id="title" style="font-size: 50px;">City Resources</p>
+            <p>City Resources is a project made for a Statistics and Probability class.</p>
+            <img src="house2.png" style="margin-left: 15%; margin-right: auto; width: 800px; height: 500px;">
+        </div>
+        <div id="structure">
+            <p>For a "simple" explanation i divided this documentation in three parts, <br>The City, The Resources and The Co-Relation.</p>
+        </div>
+        <div id="city">
+            <p style="font-size: 50px;">The City</p>
+            <p>This project generates a random city with 3 types of buildings,<br> each building has its own random number and type of household goods and each household goods have a predefined<br> consume of energy and/or water wich is used to calculate the total of energy and water consumed in a day. Example:</p>
+            <br>
+            <p>The code generated a house type 1:</p>
+            <ul>
+                <li>House 1:
+                    <ul>
+                    <li>N° of Residents: 3</li>
+                    <li>Household items:
+                        <ul>
+                            <li>Shower
+                                <ul>
+                                    <li>energy: In a 15 min shower it uses N (kW/h) * N of residents * Frequency</li>
+                                    <li>water: In a 15 min shower it uses N (L) * N of residents * Frequency</li>
+                                </ul>
+                            </li>
+                            <li>Dish washer:
+                                <ul>
+                                    <li>energy: N (kW/h) per cycle</li>
+                                    <li>water: N (L) per cycle</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    </ul>
+                </li>
+                <li>...</li>
+            </ul>
+            <p> After a house is generated, the code also randomizes a usage of each household item, for example, if there is 3 residents,<br> they will use the shower at least 3 times a day (1 shower per person), but they can use it more times,<br> with that we can simulate how much energy and water this house will consume in a day, month, or year. After generating the frequency of use for each house,<br> we simulate a year and sum the data from all the houses and display it in a chart.</p>
+ 
+        </div>
+        
+        <div id="references">
+           
+            <p style="font-size: 50px;">References</p>
+            <p>[1].<a href="www.pha.poli.usp.br/LeArq.aspx?id_arq=7813">www.pha.poli.usp.br/LeArq.aspx?id_arq=7813</a></p>
+        </div>
+        
+        
+    </div>
+    
+
+
+</body>
+</html>

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>City</title>
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body style="margin: 0; overflow: hidden;">
+    
+    <div id="configs" class="fas fa-cog" style="font-size: 30px; text-align: center;">
+        <div id="menus">
+            <div id="menu1" class="fas fa-mountain" style="font-size: 30px; text-align: center;">
+               <div id="basinConfigs" >
+                    River lenght (Km):
+                    <br>
+                    <input id="l" type="number" value="21.5">
+                    <br>
+                    Max diference of height on the river (m):
+                    <br>
+                    <input id="h" type="number" value="220">
+                    <br>
+                    Hydrographic basin area (Km2):
+                    <br>
+                    <input id="a" type="number" value="71.8">
+                    <br>
+                    River base flow rate (m3/s):
+                    <br>
+                    <input id="v" type="number" value="30">
+                    <br>
+                    <canvas id="riverFlow"></canvas>
+               </div>
+              
+            </div>
+            <div id="menu2" class="fas fa-bolt" style="font-size: 30px; text-align: center;">
+                <div id="hydroConfigs">
+                    Hydroeletric efficiency:
+                    <br>
+                    <input id="e" type="number" value="0.45">
+                    <br>
+                    Difference of height (m):
+                    <br>
+                    <input id="d" type="number" value="50">
+                    <br>
+                    Capacity factor:
+                    <br>
+                    <input id="cf" type="number" value="90">
+                    <br>
+                    Percentage of the flow used in the turbines:
+                    <br>
+                    <input id="r" type="number" value="1">
+                    <br>
+                    <canvas id="energyProduction"></canvas>
+                </div>
+            </div>
+            <div id="menu3" class="fas fa-water" style="font-size: 30px; text-align: center;" >
+                <div id="waterConfigs">
+                    Coefficient of the day of greatest consumption (k1):
+                    <br>
+                    <input id="k1" type="number" value="1.2">
+                    <br>
+                    Coefficient of the hour of greatest consumption (k2):
+                    <br>
+                    <input id="k2" type="number" value="1.5">
+                    <br>
+                    Hours of production: 
+                    <br>
+                    <input id="wt" type="number" value="16">
+                    <br>
+                    Water consume on the treatment station (%): 
+                    <br>
+                    <input id="wc" type="number" value="3">
+                    <br>
+                    <canvas id="waterUsed"></canvas>
+
+                    <canvas id="waterProduction"></canvas>
+
+                        
+                </div>
+            </div>
+            <div id="menu4" class="fas fa-cloud-rain" style="font-size: 30px; text-align: center;" >
+                    <div id="rainConfigs">
+                        <!-- <p id="rainTitle" style="text-align: center">Effective Rain</p> -->
+                        
+                        <div id="months">
+                            <br>
+                            jan:
+                            <input id="jan" value="50">
+                            feb:
+                            <input id="feb" value="100">
+                            mar:
+                            <input id="mar" value="190">
+                            apr:
+                            <input id="apr" value="200">
+                            may:
+                            <input id="may" value="170">
+                            jun:
+                            <input id="jun" value="180">
+                            jul:
+                            <input id="jul" value="170">
+                            aug:
+                            <input id="aug" value="100">
+                            sep:
+                            <input id="sep" value="60">
+                            oct:
+                            <input id="oct" value="50">
+                            nov:
+                            <input id="nov" value="20">
+                            dec:
+                            <input id="dec" value="50">
+                        </div>
+                        <canvas id="rainGraph"></canvas>
+                        <br>
+                        Surface runoff:
+                        <br>
+                        <input id="n" type="number" value="73">
+                        <br>
+                        <canvas id="effectiveGraph"></canvas>
+                    </div>
+            </div>
+            <div id="menu5" class="fas fa-home" style="font-size: 30px; text-align: center;" >
+                <div id="popData">
+                    <p id="pop"></p>
+                    <canvas id="energyBalance"></canvas>
+                    <canvas id="finalChart"></canvas>
+                </div>
+            </div>
+            <div id="applyBt" onclick="calculateData()" class="fas fa-check" style="font-size: 30px; text-align: center;" ></div>
+        </div>
+    </div>
+
+
+    <div id="mainChart">
+        <canvas id="myChart"></canvas>
+    </div>
+    
+    <!-- <div id="menu">
+        <button>simulate</button>
+    </div> -->
+    <div id="renderDiv"></div>
+    
+    <script src="three.js"></script>
+    <script src="charts.js"></script>
+    <script src="orbitControls.js"></script>
+    <script src="MTLLoader.js"></script>
+    <script src="OBJLoader.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>

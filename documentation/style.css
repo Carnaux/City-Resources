@@ -1,0 +1,48 @@
+#sideMenu{
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgb(230,230,230);
+    border-bottom-right-radius: 10px;
+    border-top-right-radius: 10px;
+    width: 200px;
+    height: 100%;
+    z-index: 2;
+}
+#sideMenubg{
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-color: rgb(5, 175, 175);
+    width: 205px;
+    height: 100%;
+    border-bottom-right-radius: 5px;
+    border-top-right-radius: 5px;
+    z-index: 1;
+}
+#content{
+    position: absolute;
+    top: 0;
+    left: 200px;
+  
+    width: calc(100vw - 205px); 
+    height: 100%;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+#content p{
+    text-align: center;
+    text-justify: auto;
+}
+
+#intro{
+    height: 100%;
+}
+#city{
+    height: 100%;
+}
+#references{
+    height: 100%;
+}
+
