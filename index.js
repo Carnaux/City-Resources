@@ -81,8 +81,8 @@ consumptionValues();
 importPrefabs();
 
 
-window.addEventListener( 'mousedown', onDocumentMouseDown, false );
-window.addEventListener( 'mousemove', onDocumentMouseMove, false );
+// window.addEventListener( 'mousedown', onDocumentMouseDown, false );
+// window.addEventListener( 'mousemove', onDocumentMouseMove, false );
 
 function animate() {
     requestAnimationFrame( animate );
@@ -91,7 +91,7 @@ function animate() {
 
     if(!loaded){
         if ( road instanceof THREE.Mesh && roadCorners instanceof THREE.Mesh) {
-            createOutlines();
+            // createOutlines();
             generateCity(30,30);
             loaded = !loaded;
         }
@@ -102,19 +102,19 @@ function animate() {
 
 animate();
 
-function createOutlines(){
-    var edges1 = new THREE.EdgesGeometry( house.geometry );
-    house1Outline = new THREE.LineSegments( edges1, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
-    scene.add(house1Outline);
+// function createOutlines(){
+//     var edges1 = new THREE.EdgesGeometry( house.geometry );
+//     house1Outline = new THREE.LineSegments( edges1, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
+//     scene.add(house1Outline);
 
-    var edges2 = new THREE.EdgesGeometry( house2.geometry );
-    house2Outline = new THREE.LineSegments( edges2, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
-    scene.add(house2Outline);
+//     var edges2 = new THREE.EdgesGeometry( house2.geometry );
+//     house2Outline = new THREE.LineSegments( edges2, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
+//     scene.add(house2Outline);
 
-    var edges3 = new THREE.EdgesGeometry( predio.geometry );
-    predioOutline = new THREE.LineSegments( edges3, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
-    scene.add(predioOutline);
-}
+//     var edges3 = new THREE.EdgesGeometry( predio.geometry );
+//     predioOutline = new THREE.LineSegments( edges3, new THREE.LineBasicMaterial( { color: 0xffffff } ) );
+//     scene.add(predioOutline);
+// }
 
 function generateCity(sizeX, sizeY){
 
@@ -182,19 +182,19 @@ function generateCity(sizeX, sizeY){
         for(let j = 0; j < sizeY; j++){
             if(cityBlocks[i][j] === "nd"){
                 let geometryGround = new THREE.BoxGeometry( 1, 1, 1 );
-                let materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(0,00,250)") } );
+                let materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(187,113,108)") } );
                 let ground = new THREE.Mesh( geometryGround, materialGround );
                 ground.receiveShadow = true;
                 cityBlocksMeshes[i][j] = ground;
             }else if( cityBlocks[i][j] === "b"){
                 let geometryGround = new THREE.BoxGeometry( 1, 1, 1 );
-                let materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(0,100,0)") } );
+                let materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(187,113,108)") } );
                 let ground = new THREE.Mesh( geometryGround, materialGround );
                 ground.receiveShadow = true;
                 cityBlocksMeshes[i][j] = ground;
             }else if( cityBlocks[i][j] === "s"){
                 let geometryGround = new THREE.BoxGeometry( 1, 1, 1 );
-                let materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(250,0,0))") } );
+                let materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(187,113,108))") } );
                 let ground = new THREE.Mesh( geometryGround, materialGround );
                 ground.receiveShadow = true;
                 cityBlocksMeshes[i][j] = ground;
@@ -285,7 +285,7 @@ function chooseHouseType(i,j){
             tempHouse.material[4].color = new THREE.Color("rgb(" + Math.floor(Math.random() * 255) + "," + Math.floor(Math.random() * 255)+ "," + Math.floor(Math.random() * 255) +")");
             tempHouse.receiveShadow = true;
             tempHouse.position.copy(cityBlocksMeshes[i][j].position);
-            tempHouse.position.y += 0.65;
+            tempHouse.position.y += 0.5;
             tempHouse.rotation.y = rot;
             scene.add(tempHouse);
             buildingsMeshes.push(tempHouse);
@@ -701,6 +701,7 @@ function createChart(){
                 label: "Energy (GW/h)",
                 backgroundColor: 'rgb(255, 99, 132)',
                 borderColor: 'rgb(255, 99, 132)',
+                
                 data: [db.energy[0]/Math.pow(10, 6), db.energy[1]/Math.pow(10, 6), db.energy[2]/Math.pow(10, 6),
                        db.energy[3]/Math.pow(10, 6), db.energy[4]/Math.pow(10, 6), db.energy[5]/Math.pow(10, 6),
                        db.energy[6]/Math.pow(10, 6), db.energy[7]/Math.pow(10, 6), db.energy[8]/Math.pow(10, 6),
@@ -710,6 +711,7 @@ function createChart(){
                 label: "Water (L /10^6)",
                 backgroundColor: 'rgb(50, 50, 90)',
                 borderColor: 'rgb(50, 50, 90)',
+                
                 data: [db.water[0]/Math.pow(10,6), db.water[1]/Math.pow(10,6), db.water[2]/Math.pow(10,6),
                        db.water[3]/Math.pow(10,6), db.water[4]/Math.pow(10,6), db.water[5]/Math.pow(10,6),
                        db.water[6]/Math.pow(10,6), db.water[7]/Math.pow(10,6), db.water[8]/Math.pow(10,6),
@@ -883,7 +885,7 @@ function createChart(){
         data: {
             labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
             datasets: [{
-                label: "Water Used (L /10^9)",
+                label: "Water Collected (L /10^9)",
                 backgroundColor: 'rgb(50, 50, 90)',
                 borderColor: 'rgb(50, 50, 90)',
                 data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -1251,98 +1253,98 @@ function distributeEnergy(eT, wT){
 
 }   
 
-function onDocumentMouseDown(e) {
+// function onDocumentMouseDown(e) {
    
     
-    mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
-    mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+//     mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+//     mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
   
-    let raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera(mouse, camera);
+//     let raycaster = new THREE.Raycaster();
+//     raycaster.setFromCamera(mouse, camera);
   
-    let intersects = raycaster.intersectObjects(buildingsMeshes);
+//     let intersects = raycaster.intersectObjects(buildingsMeshes);
 
     
 
-    if(intersects.length > 0){
-        for(let i = 0; i < buildingsMeshes.length; i++){
-            if(intersects[0].object.id == buildingsMeshes[i].id){
-                // let db = buildingsConsumption[i].dayCycle;
-                console.log(buildingsConsumption[i])
-                console.log(buildingsConsumptionAnnual[i])
-                // chart.config.data.datasets[0].data = [db.energy[0], db.energy[1], db.energy[2], db.energy[3], db.energy[0]];
-                // chart.config.data.datasets[1].data = [db.water[0], db.water[1], db.water[2], db.water[3], db.water[0]];
-                // chart.update();
+//     if(intersects.length > 0){
+//         for(let i = 0; i < buildingsMeshes.length; i++){
+//             if(intersects[0].object.id == buildingsMeshes[i].id){
+//                 // let db = buildingsConsumption[i].dayCycle;
+//                 console.log(buildingsConsumption[i])
+//                 console.log(buildingsConsumptionAnnual[i])
+//                 // chart.config.data.datasets[0].data = [db.energy[0], db.energy[1], db.energy[2], db.energy[3], db.energy[0]];
+//                 // chart.config.data.datasets[1].data = [db.water[0], db.water[1], db.water[2], db.water[3], db.water[0]];
+//                 // chart.update();
 
-                if(buildingsTypes[i] == 0){
-                    lastHover = house1Outline;
-                    lastHover.visible = true;
-                    lastHover.position.copy(buildingsMeshes[i].position);
-                    lastHover.rotation.copy(buildingsMeshes[i].rotation);
-                }else if(buildingsTypes[i] == 1){
-                    lastHover = house2Outline;
-                    lastHover.visible = true;
-                    lastHover.position.copy(buildingsMeshes[i].position);
-                    lastHover.rotation.copy(buildingsMeshes[i].rotation);
-                }else if(buildingsTypes[i] == 2){
-                    lastHover = predioOutline;
-                    lastHover.visible = true;
-                    lastHover.position.copy(buildingsMeshes[i].position);
-                    lastHover.rotation.copy(buildingsMeshes[i].rotation);
-                }
-            }
-        }
+//                 if(buildingsTypes[i] == 0){
+//                     lastHover = house1Outline;
+//                     lastHover.visible = true;
+//                     lastHover.position.copy(buildingsMeshes[i].position);
+//                     lastHover.rotation.copy(buildingsMeshes[i].rotation);
+//                 }else if(buildingsTypes[i] == 1){
+//                     lastHover = house2Outline;
+//                     lastHover.visible = true;
+//                     lastHover.position.copy(buildingsMeshes[i].position);
+//                     lastHover.rotation.copy(buildingsMeshes[i].rotation);
+//                 }else if(buildingsTypes[i] == 2){
+//                     lastHover = predioOutline;
+//                     lastHover.visible = true;
+//                     lastHover.position.copy(buildingsMeshes[i].position);
+//                     lastHover.rotation.copy(buildingsMeshes[i].rotation);
+//                 }
+//             }
+//         }
 
-    }else{
-        if(e.target.id != "myChart"){
-            // let db = cityConsumption;
-            // chart.config.data.datasets[0].data = [db.energy[0], db.energy[1], db.energy[2], db.energy[3], db.energy[0]];
-            // chart.config.data.datasets[1].data = [db.water[0], db.water[1], db.water[2], db.water[3], db.water[0]];
-             chart.update();
-        }
+//     }else{
+//         if(e.target.id != "myChart"){
+//             // let db = cityConsumption;
+//             // chart.config.data.datasets[0].data = [db.energy[0], db.energy[1], db.energy[2], db.energy[3], db.energy[0]];
+//             // chart.config.data.datasets[1].data = [db.water[0], db.water[1], db.water[2], db.water[3], db.water[0]];
+//              chart.update();
+//         }
         
-    }
+//     }
 
-}
+// }
 
-function onDocumentMouseMove(e) {
+// function onDocumentMouseMove(e) {
     
-    mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
-    mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
+//     mouse.x = (event.clientX / renderer.domElement.clientWidth) * 2 - 1;
+//     mouse.y = -(event.clientY / renderer.domElement.clientHeight) * 2 + 1;
   
-    let raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera(mouse, camera);
+//     let raycaster = new THREE.Raycaster();
+//     raycaster.setFromCamera(mouse, camera);
     
-    let intersects = raycaster.intersectObjects(buildingsMeshes);
-    if(e.path[1].id == "renderDiv"){
-        if(intersects.length > 0){
-            for(let i = 0; i < buildingsMeshes.length; i++){
-                if(intersects[0].object.id == buildingsMeshes[i].id){
-                    if(buildingsTypes[i] == 0){
-                        lastHover = house1Outline;
-                        lastHover.visible = true;
-                        lastHover.position.copy(buildingsMeshes[i].position);
-                        lastHover.rotation.copy(buildingsMeshes[i].rotation);
-                    }else if(buildingsTypes[i] == 1){
-                        lastHover = house2Outline;
-                        lastHover.visible = true;
-                        lastHover.position.copy(buildingsMeshes[i].position);
-                        lastHover.rotation.copy(buildingsMeshes[i].rotation);
-                    }else if(buildingsTypes[i] == 2){
-                        lastHover = predioOutline;
-                        lastHover.visible = true;
-                        lastHover.position.copy(buildingsMeshes[i].position);
-                        lastHover.rotation.copy(buildingsMeshes[i].rotation);
-                    }
-                }
-            }
-        }else{
-            if(lastHover != null){
-                lastHover.visible = false;
-            }
-        }
-    }
-}
+//     let intersects = raycaster.intersectObjects(buildingsMeshes);
+//     if(e.path[1].id == "renderDiv"){
+//         if(intersects.length > 0){
+//             for(let i = 0; i < buildingsMeshes.length; i++){
+//                 if(intersects[0].object.id == buildingsMeshes[i].id){
+//                     if(buildingsTypes[i] == 0){
+//                         lastHover = house1Outline;
+//                         lastHover.visible = true;
+//                         lastHover.position.copy(buildingsMeshes[i].position);
+//                         lastHover.rotation.copy(buildingsMeshes[i].rotation);
+//                     }else if(buildingsTypes[i] == 1){
+//                         lastHover = house2Outline;
+//                         lastHover.visible = true;
+//                         lastHover.position.copy(buildingsMeshes[i].position);
+//                         lastHover.rotation.copy(buildingsMeshes[i].rotation);
+//                     }else if(buildingsTypes[i] == 2){
+//                         lastHover = predioOutline;
+//                         lastHover.visible = true;
+//                         lastHover.position.copy(buildingsMeshes[i].position);
+//                         lastHover.rotation.copy(buildingsMeshes[i].rotation);
+//                     }
+//                 }
+//             }
+//         }else{
+//             if(lastHover != null){
+//                 lastHover.visible = false;
+//             }
+//         }
+//     }
+// }
 
 function calculateData(){
     let L = parseFloat(document.getElementById("l").value);
