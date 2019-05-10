@@ -24,7 +24,7 @@ let predioOutline;
 
 let lastHover;
 
-let chart, rainChart, effectiveChart, flowChart, energyChart, waterChart, popChart;
+let chart, rainChart, effectiveChart, flowChart, energyChart, waterChartUsed, waterChart, finalChart, energyBalanceChart;
 
 let cityConsumption = {
     energy:[0,0,0,0],
@@ -650,6 +650,7 @@ function calculateTotal(){
         cityConsumption.people += buildingsConsumption[i].people;
     }
 
+    document.getElementById("pop").textContent = "Population: "+cityConsumption.people;
     cityConsumption.totalEnergy = cityConsumption.energy[0] + cityConsumption.energy[1] + cityConsumption.energy[2] + cityConsumption.energy[3];
     cityConsumption.totalWater = cityConsumption.water[0] + cityConsumption.water[1] + cityConsumption.water[2] + cityConsumption.water[3];
 
@@ -677,8 +678,7 @@ function calculateTotal(){
     
         }
         annualCityConsumption.energy[i] = monthTotal.energy;
-        annualCityConsumption.water[i] = monthTotal.water;
-        console.log(monthTotal)
+        annualCityConsumption.water[i] = monthTotal.water/10;
     }
 
     createChart();
@@ -704,16 +704,16 @@ function createChart(){
                 data: [db.energy[0]/Math.pow(10, 6), db.energy[1]/Math.pow(10, 6), db.energy[2]/Math.pow(10, 6),
                        db.energy[3]/Math.pow(10, 6), db.energy[4]/Math.pow(10, 6), db.energy[5]/Math.pow(10, 6),
                        db.energy[6]/Math.pow(10, 6), db.energy[7]/Math.pow(10, 6), db.energy[8]/Math.pow(10, 6),
-                       db.energy[9]/Math.pow(10, 6), db.energy[10/Math.pow(10, 6)], db.energy[11/Math.pow(10, 6)]]
+                       db.energy[9]/Math.pow(10, 6), db.energy[10]/Math.pow(10, 6), db.energy[11]/Math.pow(10, 6)]
             },
             {
-                label: "Water (L /10^9)",
+                label: "Water (L /10^6)",
                 backgroundColor: 'rgb(50, 50, 90)',
                 borderColor: 'rgb(50, 50, 90)',
-                data: [db.water[0]/Math.pow(10,9), db.water[1]/Math.pow(10,9), db.water[2]/Math.pow(10,9),
-                       db.water[3]/Math.pow(10,9), db.water[4]/Math.pow(10,9), db.water[5]/Math.pow(10,9),
-                       db.water[6]/Math.pow(10,9), db.water[7]/Math.pow(10,9), db.water[8]/Math.pow(10,9),
-                       db.water[9]/Math.pow(10,9), db.water[10/Math.pow(10,9)], db.water[11/Math.pow(10,9)]]
+                data: [db.water[0]/Math.pow(10,6), db.water[1]/Math.pow(10,6), db.water[2]/Math.pow(10,6),
+                       db.water[3]/Math.pow(10,6), db.water[4]/Math.pow(10,6), db.water[5]/Math.pow(10,6),
+                       db.water[6]/Math.pow(10,6), db.water[7]/Math.pow(10,6), db.water[8]/Math.pow(10,6),
+                       db.water[9]/Math.pow(10,6), db.water[10]/Math.pow(10,6), db.water[11]/Math.pow(10,6)]
             }
         ]
         },
@@ -849,7 +849,7 @@ function createChart(){
         data: {
             labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
             datasets: [{
-                label: "Energy Produced (kW/h)",
+                label: "Energy Produced (GW/h)",
                 backgroundColor: 'rgb(50, 50, 90)',
                 borderColor: 'rgb(50, 50, 90)',
                 data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -874,6 +874,40 @@ function createChart(){
         }
     });
 
+    let waterUsed = document.getElementById('waterUsed').getContext('2d');
+    waterChartUsed = new Chart(waterUsed, {
+        // The type of chart we want to create
+        type: 'bar',
+
+        // The data for our dataset
+        data: {
+            labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
+            datasets: [{
+                label: "Water Used (L /10^9)",
+                backgroundColor: 'rgb(50, 50, 90)',
+                borderColor: 'rgb(50, 50, 90)',
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+            maintainAspectRatio: true,
+            scales: {
+                xAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }],
+                yAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }]
+            }
+        }
+    });
+
     let waterProduction = document.getElementById('waterProduction').getContext('2d');
     waterChart = new Chart(waterProduction, {
         // The type of chart we want to create
@@ -883,7 +917,7 @@ function createChart(){
         data: {
             labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
             datasets: [{
-                label: "Water Produced (m3/s)",
+                label: "Water Distributed (L /10^9)",
                 backgroundColor: 'rgb(50, 50, 90)',
                 borderColor: 'rgb(50, 50, 90)',
                 data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -900,6 +934,96 @@ function createChart(){
                     },
                 }],
                 yAxes: [{
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }]
+            }
+        }
+    });
+
+    let energyBalance = document.getElementById('energyBalance').getContext('2d');
+    energyBalanceChart = new Chart(energyBalance, {
+        // The type of chart we want to create
+        type: 'bar',
+
+        // The data for our dataset
+        data: {
+            labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
+            datasets: [{
+                label: "Energy Produced (GW/h)",
+                backgroundColor: 'rgb(195, 209, 68)',
+                borderColor: 'rgb(195, 209, 68)',
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },{
+                label: "Energy Consumed (GW/h)",
+                backgroundColor: 'rgb(180, 00, 00)',
+                borderColor: 'rgb(180, 00, 00)',
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+            //maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }],
+                yAxes: [{
+                    stacked: true,
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }]
+            }
+        }
+    });
+
+
+    let final = document.getElementById('finalChart').getContext('2d');
+    finalChart = new Chart(final, {
+        // The type of chart we want to create
+        type: 'bar',
+
+        // The data for our dataset
+        data: {
+            labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
+            datasets: [{
+                label: "River Flow (m3/s)",
+                backgroundColor: 'rgb(50, 50, 90)',
+                borderColor: 'rgb(50, 50, 90)',
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            {
+                label: "Flow for energy (m3/s)",
+                backgroundColor: 'rgb(195, 209, 68)',
+                borderColor: 'rgb(195, 209, 68)',
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            },
+            {
+                label: "Flow for water (m3/s)",
+                backgroundColor: 'rgb(153,204,255)',
+                borderColor: 'rgb(153,204,255)',
+                data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+            //maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    stacked: true,
+                    gridLines: {
+                        color: 'rgb(0, 0, 0)'
+                    },
+                }],
+                yAxes: [{
+                    stacked: true,
                     gridLines: {
                         color: 'rgb(0, 0, 0)'
                     },
@@ -1260,9 +1384,17 @@ function calculateData(){
         effectiveRain.push(value);
         riverFlow.push( baseFlow + flow);
         energyArr.push(energyGenerated);
-    
+
     }
 
+    let days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let waterArr = [];
+    for(let i = 0; i < annualCityConsumption.water.length; i++){
+        let q = (annualCityConsumption.water[i]/days[i])/cityConsumption.people;
+        let w = calculateWater(q);
+        waterArr.push(w);
+    }
+    
     effectiveChart.config.data.datasets[0].data = [effectiveRain[0],effectiveRain[1],effectiveRain[2],effectiveRain[3],
                                                    effectiveRain[4],effectiveRain[5],effectiveRain[6],effectiveRain[7],
                                                    effectiveRain[8],effectiveRain[9],effectiveRain[10],effectiveRain[11]];
@@ -1274,15 +1406,42 @@ function calculateData(){
                                                    riverFlow[8],riverFlow[9],riverFlow[10],riverFlow[11]];
     flowChart.update();
 
-    energyChart.config.data.datasets[0].data = [energyArr[0],energyArr[1],energyArr[2],energyArr[3],
-                                                   energyArr[4],energyArr[5],energyArr[6],energyArr[7],
-                                                   energyArr[8],energyArr[9],energyArr[10],energyArr[11]];
+    energyChart.config.data.datasets[0].data = [energyArr[0]/Math.pow(10, 6),energyArr[1]/Math.pow(10, 6),energyArr[2]/Math.pow(10, 6),energyArr[3]/Math.pow(10, 6),
+                                                   energyArr[4]/Math.pow(10, 6),energyArr[5]/Math.pow(10, 6),energyArr[6]/Math.pow(10, 6),energyArr[7]/Math.pow(10, 6),
+                                                   energyArr[8]/Math.pow(10, 6),energyArr[9]/Math.pow(10, 6),energyArr[10]/Math.pow(10, 6),energyArr[11]/Math.pow(10, 6)];
     energyChart.update();
 
-    // waterChart.config.data.datasets[0].data = [waterArr[0],waterArr[1],waterArr[2],waterArr[3],
-    //                                                waterArr[4],waterArr[5],waterArr[6],waterArr[7],
-    //                                                waterArr[8],waterArr[9],waterArr[10],waterArr[11]];
-    // waterChart.update();
+    waterChartUsed.config.data.datasets[0].data = [waterArr[0].production,waterArr[1].production,waterArr[2].production,waterArr[3].production,
+                                                   waterArr[4].production,waterArr[5].production,waterArr[6].production,waterArr[7].production,
+                                                   waterArr[8].production,waterArr[9].production,waterArr[10].production,waterArr[11].production];
+    waterChartUsed.update();
+
+    waterChart.config.data.datasets[0].data = [waterArr[0].distributed,waterArr[1].distributed,waterArr[2].distributed,waterArr[3].distributed,
+                                                waterArr[4].distributed,waterArr[5].distributed,waterArr[6].distributed,waterArr[7].distributed,
+                                                waterArr[8].distributed,waterArr[9].distributed,waterArr[10].distributed,waterArr[11].distributed];
+    waterChart.update();
+
+
+    
+    for(let i = 0; i < 12; i++){
+        let flowEnergy = (riverFlow[i]*R)/100;
+        let flowWater = (waterArr[i].production*Math.pow(10,9)/86400 * 30)/1000;
+
+        finalChart.config.data.datasets[0].data[i] = riverFlow[i]-flowEnergy-flowWater;
+        finalChart.config.data.datasets[1].data[i] = flowEnergy;
+        finalChart.config.data.datasets[2].data[i] = flowWater;
+    }
+    finalChart.update();
+
+    for(let i = 0; i < 12; i++){
+        let surplus = energyArr[i] - annualCityConsumption.energy[i];
+        energyBalanceChart.config.data.datasets[0].data[i] = surplus/Math.pow(10,6);
+        energyBalanceChart.config.data.datasets[1].data[i] = annualCityConsumption.energy[i]/Math.pow(10,6);
+    }
+    energyBalanceChart.update();
+    
+
+    
 }
 
 function calculateEffectiveRain(R, N){
@@ -1305,22 +1464,25 @@ function calculateEnergy(e, f, p, d, c){
     return Math.floor(Em);
 }
 
-function calculateWater(){
+function calculateWater(q){
     let k1 = parseFloat(document.getElementById("k1").value);
     let k2 = parseFloat(document.getElementById("k2").value);
     let t = parseFloat(document.getElementById("wt").value);
     let wc = parseFloat(document.getElementById("wc").value);
 
     let P = cityConsumption.people;
-    let q = cityConsumption.totalWater/cityConsumption.people;
-
-    let Q = k1 * k2 * ((P * q)/86400);
+    
+    let Q = ((P * q)/86400);
 
     let qProduction = ((Q * k1 * 24)/t) * (1 + (wc/100));
 
     let qDistribution = (Q * k1 * k2);
     
+    console.log((qProduction) );
     
-  
-    return qDistribution/12;
+    let water = {
+        production: (qProduction * 86400 * 30)/Math.pow(10, 9),
+        distributed: (qDistribution * 86400 * 30)/Math.pow(10, 9)
+    }
+    return water;
 }

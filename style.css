@@ -141,10 +141,10 @@
 
 #waterConfigs{
     position: absolute;
-    top: -100px;
+    top: -150px;
     left: 50px;
     width: 500px;
-    height: 370px;
+    height: 670px;
     background-color: rgb(235, 25, 225);
     display: none;
 
@@ -241,6 +241,11 @@
 #energyProduction{
     width: 150px;
     height: 100px;
+}
+
+#waterUsed{
+    width: 100px;
+    height:100px;
 }
 
 #waterProduction{

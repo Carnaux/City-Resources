@@ -51,7 +51,7 @@
                     <br>
                     Percentage of the flow used in the turbines:
                     <br>
-                    <input id="r" type="number" value="0.015">
+                    <input id="r" type="number" value="1">
                     <br>
                     <canvas id="energyProduction"></canvas>
                 </div>
@@ -74,6 +74,8 @@
                     <br>
                     <input id="wc" type="number" value="3">
                     <br>
+                    <canvas id="waterUsed"></canvas>
+
                     <canvas id="waterProduction"></canvas>
 
                         
@@ -121,7 +123,9 @@
             </div>
             <div id="menu5" class="fas fa-home" style="font-size: 30px; text-align: center;" >
                 <div id="popData">
-                    <canvas id="popChart"></canvas>
+                    <p id="pop"></p>
+                    <canvas id="energyBalance"></canvas>
+                    <canvas id="finalChart"></canvas>
                 </div>
             </div>
             <div id="applyBt" onclick="calculateData()" class="fas fa-check" style="font-size: 30px; text-align: center;" ></div>
