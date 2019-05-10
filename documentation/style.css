@@ -39,10 +39,44 @@
 #intro{
     height: 100%;
 }
-#city{
-    height: 100%;
-}
+
+
+
 #references{
     height: 100%;
 }
 
+@media only screen and (min-width: 992px) {
+
+    #imgCity{
+        margin-left: 0;
+        width: 700px; 
+        height: 500px;
+    }
+    #imgHouses{
+        width: 800px; 
+        height: 500px;
+    }
+    #basinMenu{
+        width: 600px; 
+        height: 500px;
+    }
+} 
+@media only screen and (min-width: 1200px) {
+
+    #imgCity{
+        margin-left: 150px;
+        width: 800px; 
+        height: 500px;
+    }
+    #imgHouses{
+        margin-left: 200px;
+        width: 800px; 
+        height: 500px;
+    }
+    #basinMenu{
+        margin-left: 300px;
+        width: 600px; 
+        height: 500px;
+    }
+}
