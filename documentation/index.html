@@ -76,21 +76,74 @@
             <br>
             <p>The menu where you edit the river and see it's mean flow rate per month.</p>
             <img id="basinMenu" src="basin.png">
+            <p style="font-size: 15px;">Chart 1 - Basin Configs</p>
             <br>
-            <p style="font-size: 20px;">The runoff calculations</p>
+            <p style="font-size: 20px;"><b>The runoff calculations</b></p>
 
-            <p>The method used is the Soil Conservation Service (SCS) (Triangular Unit Hydrogram) .</p>
+            <p>The method used to calculate how the river flow change based in the rain regime is the Soil Conservation Service (SCS) (Triangular Unit Hydrogram) .</p>
             <p>"The Soil Conservation Service proposed the development of a synthetic unit hydrograph from<br>
                     an admission, requiring only the determination of the peak flow and the time in which it<br>
                     occurs".<a href="http://www.deha.ufc.br/ticiana/Arquivos/Graduacao/Apostila_Hidrologia_grad/Cap_8_Escoamento_Superficial.pdf">[1]</a></p>
             <br>
-            <p>Concentration time (ct)</p>
-            <p>     It is the time interval counted from the beginning of the precipitation so that the whole basin<br>
-                    shall contribute to the study section. Corresponds to the duration of the trajectory<br>
-                    of the particle of water that takes longer to reach the section.</p>
-            <p>`ct = 57*(L^3/H)^0.385`</p>
-            <p>Where L = The lenght of the river<br>
-            and <br>H = The area of de drainage basin</p>
+            <p><b>Concentration time (tc)</b></p>
+            <p>     "It is the time interval counted from the beginning of the precipitation so that the whole basin<br>
+                    shall contribute to the study section."<a href="http://www.deha.ufc.br/ticiana/Arquivos/Graduacao/Apostila_Hidrologia_grad/Cap_8_Escoamento_Superficial.pdf">[1]</a></p>
+            <p>`tc = 57*(L^3/H)^0.385 (h)`</p>
+            <p>Where,<br> L = The lenght of the river (`Km`)<br>
+            and <br>H = The area of the drainage basin (`Km^2)`</p>
+            <br>
+            <p><b>Rain duration (tr)</b></p>
+            <p>`tr = 1/5*tc (h)`</p>
+            <br>
+            <p><b>Peak time (tp)</b></p>
+            <p>`tp = 0,5*tr + 0,6*tc (h)`</p>
+            <br>
+            <p><b>Base time (tb)</b></p>
+            <p>`tb = 2,67 * tp (h)`</p>
+            <br>
+            <p><b>Peak flow rate (fp)</b></p>
+            <p>`fp = (2*Pe*H)/(tb) (m^3/s)`</p>
+            <p>Where,<br>Pe = Effective Precipitation (`mm`)<br>
+            and <br>H = The area of the drainage basin (`Km^2`)</p>
+            <br>
+            <p><b>Effective Precipitation (Pe)</b></p>
+            <p>`Pe = (((P - 5080 )/ (N + 50,8))^2)/((P + 20320) / (N - 203,2)) (mm)`</p>
+            <p>Where,<br>P = Precipitation<br>
+            and <br>N = runoff number</p>
+            <br>
+            <table>
+                <tr>
+                  <th>Land Usage</th>
+                  <th>Surface conditions</th>
+                  <th>A*</th>
+                  <th>B*</th>
+                  <th>C*</th>
+                  <th>D*</th>
+                </tr>
+                <tr>
+                  <td>Cultivated land</td>
+                  <td>Griffin</td>
+                  <td>$100</td>
+                </tr>
+                <tr>
+                  <td>Regular plantation</td>
+                  <td>Griffin</td>
+                  <td>$150</td>
+                </tr>
+                <tr>
+                  <td>Cereal plantation</td>
+                  <td>Swanson</td>
+                  <td>$300</td>
+                </tr>
+                <tr>
+                  <td>
+                    Planting of leguminous plants
+                    or cultivated fields</td>
+                  <td>Brown</td>
+                  <td>$250</td>
+                </tr>
+              </table>
+            
         </div>
         
         <div id="references">
