@@ -46,6 +46,21 @@
     height: 100%;
 }
 
+table, td, th {  
+    border: 1px solid #ddd;
+    text-align: left;
+  }
+  
+  table {
+      font-size: 15px;
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  th, td {
+    padding: 15px;
+  }
+
 @media only screen and (min-width: 992px) {
 
     #imgCity{
