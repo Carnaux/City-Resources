@@ -1,6 +1,7 @@
 # City Resources
 
-City Resources is a project made for a Statistics and Probability class.
+City Resources is a project made for a Statistics and Probability class that simulates how the production of water and
+energy of a city changes based on rain regime.
 
 #### How it works
 
@@ -21,8 +22,15 @@ and so on...
 
 When the code finish generating the city it uses default values to generate a rain/drought regime wich determines the energy and consumable water production. 
 
+# Thanks to
 
-References
+Three.js - https://threejs.org/
+
+Chart.js - https://www.chartjs.org/
+
+MathJax - https://www.mathjax.org/
+
+# References
 
 www.pha.poli.usp.br/LeArq.aspx?id_arq=7813
 
