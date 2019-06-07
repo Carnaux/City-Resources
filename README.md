@@ -1,48 +1,43 @@
-# Laparoscopic Trainer
+# City Resources
 
-The software of a laparoscopic trainer system requested by a professor of the department of medicine of Federal University of Rio Grande do Norte (UFRN).
+City Resources is a project made for a Statistics and Probability class.
+
+#### How it works
+
+This project generates a random city with 3 types of buildings, each building has its own random number and type of household goods and each household goods have a predefined consume of energy and/or water wich is used to calculate the total of energy and water consumed in a day. Example:
+
+The code generated a house type 1:
+
+- House type 1:
+    - N of residents: 3
+    - Shower:
+        - energy: In a 15 min shower it uses N (kW/h) * N of residents
+        - water: In a 15 min shower it uses N (L) * N of residents
+    - Dish washer:
+        - energy: N (kW/h) per cycle
+        - water: N (L) per cycle
+
+and so on...
+
+When the code finish generating the city it uses default values to generate a rain/drought regime wich determines the energy and consumable water production. 
 
 
-#### Objective:
-Create a platform where students can practice depth perception.
+References
 
-#### Project Status
+www.pha.poli.usp.br/LeArq.aspx?id_arq=7813
 
-|Lessons     | Progress |
-| ------------- | -----:|
-| Lesson 1      | 95%    |
-| Lesson 2      | 80%    |
-| Lesson 3      | 0%    |
+http://hidro.gd/calculando-a-energia-gerada/
 
+https://www.slideshare.net/YaraNeves3/6-modelos-chuva-vazo-rubertoparte1
 
-#### How to use it
+http://www.evolvedoc.com.br/sbrh/detalhes-185_calibracao-de-um-modelo-hidrologico-tipo-chuva-vazao-para-bacia-hidrografica-do-rio-do-peixe
 
-The final version will use a device made by the Mechatronics Department of UFRN. The device will simulate the tools inside a patient, but in the development version of the software you can use the keyboard.
+http://www.deha.ufc.br/ticiana/Arquivos/Graduacao/Apostila_Hidrologia_grad/Cap_8_Escoamento_Superficial.pdf
 
+https://capacitacao.ead.unesp.br/dspace/bitstream/ana/66/2/Unidade_1.pdf
 
-## Keybindings
+https://www.usbr.gov/power/edu/pamphlet.pdf
 
-#### Left Tool
-|Action  |Key |
-| ------------- | -----:|
-| Forward     |  W    |
-| Backward     | S   |
-| Yaw - left   | A    |
-| Yaw - Right   | D   |
-| Pitch - up  |  Q  |
-| Pitch - down  | E   |
-| Open grabber   | Left Shift   |
-|  Close grabber    |  Left Ctrl   |
+https://www.guiadaengenharia.com/dimensionamento-de-uma-eta/
 
-#### Right Tool
-|Action  |Key |
-| ------------- | -----:|
-| Forward     |  O   |
-| Backward     | L   |
-| Yaw - left   | K    |
-| Yaw - Right   | Ç / ; / Ñ   |
-| Pitch - up  |  I  |
-| Pitch - down  | P   |
-| Open grabber   | M   |
-|  Close grabber    |  N   |
-
+http://www.ufrrj.br/institutos/it/deng/leonardo/downloads/APOSTILA/Apostila%20IT%20179/Cap%204%20parte%201.pdf
