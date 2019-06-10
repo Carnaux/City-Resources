@@ -15,6 +15,13 @@ let crossroads;
 let roadIntervalX = 0;
 let roadIntervalY = 0;
 
+let zones = {
+    zone1: [],
+    zone2: [],
+    zone3: [],
+    zone4: []
+}
+
 let consumptionTable;
 let useFrequency;
 
@@ -258,6 +265,77 @@ function generateCity(sizeX, sizeY){
     roadCorners.position.copy(cityBlocksMeshes[0][0].position);
     roadCorners.position.y += 0.5;
     scene.add(roadCorners);
+
+    createZones()
+}
+
+function createZones(){
+
+    var geometry = new THREE.PlaneGeometry( 15.2, 15 );
+    var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(0,120,0)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
+    let zone1 = new THREE.Mesh( geometry, material );
+    zone1.position.set(7, 2, 7.5);
+    zone1.rotation.x = Math.PI/2;
+    scene.add( zone1 );
+
+    var geometry = new THREE.PlaneGeometry( 15, 15 );
+    var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(120,0,0)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
+    let zone2 = new THREE.Mesh( geometry, material );
+    zone2.position.set(-8, 2, -7.5);
+    zone2.rotation.x = Math.PI/2;
+    scene.add( zone2 );
+
+    var geometry = new THREE.PlaneGeometry( 15.2, 15 );
+    var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(0,0,120)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
+    let zone3 = new THREE.Mesh( geometry, material );
+    zone3.position.set(7, 2, -7.5);
+    zone3.rotation.x = Math.PI/2;
+    scene.add( zone3 );
+
+    var geometry = new THREE.PlaneGeometry( 15, 15 );
+    var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(120,0,120)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
+    let zone4 = new THREE.Mesh( geometry, material );
+    zone4.position.set(-8, 2, 7.5);
+    zone4.rotation.x = Math.PI/2;
+    scene.add( zone4 );
+
+
+    for(let i = 0; i < cityBlocks.length; i++){
+        for(let j = 0; j < cityBlocks[i].length; j++){
+            if(cityBlocks[i][j] === "b"){
+
+                let tempPos = new THREE.Vector3();
+                tempPos.copy(cityBlocksMeshes[i][j].position);
+                tempPos.y = 3;
+                var dotGeometry = new THREE.Geometry();
+                dotGeometry.vertices.push(tempPos);
+
+                var dotMaterial = new THREE.PointsMaterial({
+                size: 10,
+                sizeAttenuation: false
+                });
+                
+
+                if(i < 15 && j < 15){
+                    zones.zone2.push(tempPos)
+                    dotMaterial.color = new THREE.Color("rgb(120,0,0)");
+                }else if(i >= 15 && j < 15){
+                    zones.zone3.push(tempPos)
+                    dotMaterial.color = new THREE.Color("rgb(0,0,120)");
+                }else if(i >= 15 && j > 15){
+                    zones.zone1.push(tempPos)
+                    dotMaterial.color = new THREE.Color("rgb(0,120,0)");
+                }else if(i < 15 && j > 15){
+                    zones.zone4.push(tempPos)
+                    dotMaterial.color = new THREE.Color("rgb(120,0,120)");
+                }
+                var dot = new THREE.Points(dotGeometry, dotMaterial);
+                scene.add(dot);
+            }
+        }
+    }
+
+    
 }
 
 function chooseHouseType(i,j){
