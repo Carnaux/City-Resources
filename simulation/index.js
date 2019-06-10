@@ -273,24 +273,24 @@ function createZones(){
 
     var geometry = new THREE.PlaneGeometry( 15.2, 15 );
     var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(0,120,0)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
+    let zone3 = new THREE.Mesh( geometry, material );
+    zone3.position.set(7, 2, 7.5);
+    zone3.rotation.x = Math.PI/2;
+    scene.add( zone3 );
+
+    var geometry = new THREE.PlaneGeometry( 15, 15 );
+    var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(0,0,120)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
     let zone1 = new THREE.Mesh( geometry, material );
-    zone1.position.set(7, 2, 7.5);
+    zone1.position.set(-8, 2, -7.5);
     zone1.rotation.x = Math.PI/2;
     scene.add( zone1 );
 
-    var geometry = new THREE.PlaneGeometry( 15, 15 );
+    var geometry = new THREE.PlaneGeometry( 15.2, 15 );
     var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(120,0,0)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
     let zone2 = new THREE.Mesh( geometry, material );
-    zone2.position.set(-8, 2, -7.5);
+    zone2.position.set(7, 2, -7.5);
     zone2.rotation.x = Math.PI/2;
     scene.add( zone2 );
-
-    var geometry = new THREE.PlaneGeometry( 15.2, 15 );
-    var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(0,0,120)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
-    let zone3 = new THREE.Mesh( geometry, material );
-    zone3.position.set(7, 2, -7.5);
-    zone3.rotation.x = Math.PI/2;
-    scene.add( zone3 );
 
     var geometry = new THREE.PlaneGeometry( 15, 15 );
     var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(120,0,120)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
@@ -317,13 +317,13 @@ function createZones(){
                 
 
                 if(i < 15 && j < 15){
+                    zones.zone1.push(tempPos)
+                    dotMaterial.color = new THREE.Color("rgb(0,0,120)");
+                }else if(i >= 15 && j < 15){
                     zones.zone2.push(tempPos)
                     dotMaterial.color = new THREE.Color("rgb(120,0,0)");
-                }else if(i >= 15 && j < 15){
-                    zones.zone3.push(tempPos)
-                    dotMaterial.color = new THREE.Color("rgb(0,0,120)");
                 }else if(i >= 15 && j > 15){
-                    zones.zone1.push(tempPos)
+                    zones.zone3.push(tempPos)
                     dotMaterial.color = new THREE.Color("rgb(0,120,0)");
                 }else if(i < 15 && j > 15){
                     zones.zone4.push(tempPos)

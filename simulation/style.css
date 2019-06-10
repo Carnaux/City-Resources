@@ -1,3 +1,19 @@
+#configs{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(20, 90, 120);
+}
+#houseData{
+    position: absolute;
+    top: 50px;
+    left: 0;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(20, 90, 120);
+}
 #peopleDiv{
     position: absolute;
     top: 0;
@@ -12,24 +28,19 @@
     background-color: rgba(48, 51, 51,0.75);
 }
 
+
 #mainChart{
     position: absolute;
     bottom: 0;
     width: 100%;
     height: 200px;
 }
-
-#configs{
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 50px;
-    height: 50px;
-    background-color: rgb(20, 90, 120);
-}
-
 #configs:hover{
     height: 200px;
+    z-index: 1;
+}
+#configs:hover #houseData{
+    z-index: 0;
 }
 
 #configs:hover #menu1{
@@ -260,3 +271,69 @@
 
 
 
+#houseData:hover{
+    height: 200px;
+}
+
+#zone1{
+    position: absolute;
+    top: 50px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(0, 0, 120);
+    display: none;
+}
+
+#zone2{
+    position: absolute;
+    top: 100px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(120, 0, 0);
+    display: none;
+}
+
+#zone3{
+    position: absolute;
+    top: 150px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(0, 120, 0);
+    display: none;
+}
+
+#zone4{
+    position: absolute;
+    top: 200px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(120, 0, 120);
+    display: none;
+}
+#allZones{
+    position: absolute;
+    top: 250px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(120, 120, 120);
+    display: none;
+}
+
+#houseData:hover #zone1{
+    display: block;
+}
+
+#houseData:hover #zone2{
+    display: block;
+}
+
+#houseData:hover #zone3{
+    display: block;
+}
+
+#houseData:hover #zone4{
+    display: block;
+}
+#houseData:hover #allZones{
+    display: block;
+}
