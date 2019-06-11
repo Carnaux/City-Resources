@@ -18,6 +18,12 @@ let roadIntervalY = 0;
 let highestEnergy = 0;
 let highestWater = 0;
 
+let maxColor = new THREE.Vector3(255,0,0);
+let minColor = new THREE.Vector3(0,0,255);
+
+let maxHeight = 10;
+let minHeight = 0;
+
 let zoneObj1, zoneObj2, zoneObj3, zoneObj4;
 
 let zones = {
@@ -26,6 +32,8 @@ let zones = {
     zone3: [],
     zone4: []
 }
+
+let allDots = [];
 
 let consumptionTable;
 let useFrequency;
@@ -91,6 +99,18 @@ var materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(
 consumptionValues();
 
 importPrefabs();
+
+// var dotGeometry = new THREE.Geometry();
+// dotGeometry.vertices.push(new THREE.Vector3(0,15,0));
+
+// var dotMaterial = new THREE.PointsMaterial({
+// size: 10,
+// sizeAttenuation: false,
+// color: new THREE.Color("rgb(120,120,0)"),
+// });
+// let dot1 = new THREE.Points(dotGeometry, dotMaterial);
+// scene.add(dot1);
+
 
 
 // window.addEventListener( 'mousedown', onDocumentMouseDown, false );
@@ -312,7 +332,7 @@ function createZones(){
     zoneObj3.zoneMesh = zone3;
 
     var geometry = new THREE.PlaneGeometry( 15, 15 );
-    var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(0,0,120)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
+    var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(120,120,0)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
     let zone1 = new THREE.Mesh( geometry, material );
     zone1.position.set(-8, 2, -7.5);
     zone1.rotation.x = Math.PI/2;
@@ -374,24 +394,28 @@ function createZones(){
                     let dot = new THREE.Points(dotGeometry, dotMaterial);
                     group1Arr.push(dot);
                     group1.add(dot);
+                    allDots.push(dot);
                 }else if(i >= 15 && j < 15){
                     zones.zone2.push(tempPos)
                     dotMaterial.color = new THREE.Color("rgb(120,0,0)");
                     let dot = new THREE.Points(dotGeometry, dotMaterial);
                     group2Arr.push(dot);
                     group2.add(dot);
+                    allDots.push(dot);
                 }else if(i >= 15 && j > 15){
                     zones.zone3.push(tempPos)
                     dotMaterial.color = new THREE.Color("rgb(0,120,0)");
                     let dot = new THREE.Points(dotGeometry, dotMaterial);
                     group3Arr.push(dot)
                     group3.add(dot);
+                    allDots.push(dot);
                 }else if(i < 15 && j > 15){
                     zones.zone4.push(tempPos)
                     dotMaterial.color = new THREE.Color("rgb(120,0,120)");
                     let dot = new THREE.Points(dotGeometry, dotMaterial);
                     group4Arr.push(dot)
                     group4.add(dot);
+                    allDots.push(dot);
                 }
                 
                 scene.add(group1);
@@ -402,17 +426,45 @@ function createZones(){
         }
     }
 
-    
+    updateZones(1);
 }
 
 function updateZones(n){
-    // if(n == 1){
-    //     for(let i = 0; i < )
-    // }
+    if(n == 1){
+        for(let i = 0; i < buildingsConsumption.length; i++){
+            interpolateDot(allDots[i], buildingsConsumption[i].energy.total, 1);
+        }
+    }
 }
 
-function interpolateDot(){
+function interpolateDot(dot, total, t){
+    let max = 0;
+    if(t == 1){
+        max = highestEnergy;
+    }else{
+        max = highestWater;
+    }
 
+    let fraction = total/max;  
+        
+    R =  parseInt((maxColor.x - minColor.x) * fraction + minColor.x);
+    G =  parseInt((maxColor.y - minColor.y) * fraction + minColor.y);
+    B =  parseInt((maxColor.z - minColor.z) * fraction + minColor.z);
+        
+    dot.material.color = new THREE.Color("rgb(" + R + "," + G + "," + B + ")");
+
+    let tempMaxHeight = maxHeight;
+    let tempMinHeight = minHeight;
+    if(fraction < 0.01){
+        tempMaxHeight = 1200;
+    }else{
+        tempMaxHeight = 30;
+        tempMinHeight = 12;
+    }
+    let y = parseInt((tempMaxHeight - tempMinHeight) * fraction + tempMinHeight);
+
+    dot.position.set(dot.position.x, y, dot.position.z);
+    console.log(fraction)
 }
 
 function showZone(n){
