@@ -15,6 +15,9 @@ let crossroads;
 let roadIntervalX = 0;
 let roadIntervalY = 0;
 
+let highestEnergy = 0;
+let highestWater = 0;
+
 let zoneObj1, zoneObj2, zoneObj3, zoneObj4;
 
 let zones = {
@@ -268,6 +271,8 @@ function generateCity(sizeX, sizeY){
     roadCorners.position.y += 0.5;
     scene.add(roadCorners);
 
+    console.log("energy",highestEnergy);
+    console.log("water", highestWater);
     createZones()
 }
 
@@ -398,6 +403,16 @@ function createZones(){
     }
 
     
+}
+
+function updateZones(n){
+    // if(n == 1){
+    //     for(let i = 0; i < )
+    // }
+}
+
+function interpolateDot(){
+
 }
 
 function showZone(n){
@@ -751,6 +766,13 @@ function generateConsumption(){
         let energyTotal = Math.floor(sumObjs(energyConsumption));
         let waterTotal =  Math.floor(sumObjs(waterConsumption));
         
+        if(energyTotal > highestEnergy){
+            highestEnergy = energyTotal;
+        }
+        if(waterTotal > highestWater){
+            highestWater = waterTotal;
+        }
+
         let distribution = distributeEnergy(energyTotal, waterTotal);
 
         let houseStats = {
