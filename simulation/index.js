@@ -15,6 +15,8 @@ let crossroads;
 let roadIntervalX = 0;
 let roadIntervalY = 0;
 
+let zoneObj1, zoneObj2, zoneObj3, zoneObj4;
+
 let zones = {
     zone1: [],
     zone2: [],
@@ -271,12 +273,38 @@ function generateCity(sizeX, sizeY){
 
 function createZones(){
 
+    zoneObj1 = {
+        zoneMesh: null,
+        group: null,
+        dotArr: null,
+        indexArr: null,
+    };
+    zoneObj2 = {
+        zoneMesh: null,
+        group: null,
+        dotArr: null,
+        indexArr: null,
+    };
+    zoneObj3 = {
+        zoneMesh: null,
+        group: null,
+        dotArr: null,
+        indexArr: null,
+    };
+    zoneObj4 = {
+        zoneMesh: null,
+        group: null,
+        dotArr: null,
+        indexArr: null,
+    };
+
     var geometry = new THREE.PlaneGeometry( 15.2, 15 );
     var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(0,120,0)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
     let zone3 = new THREE.Mesh( geometry, material );
     zone3.position.set(7, 2, 7.5);
     zone3.rotation.x = Math.PI/2;
     scene.add( zone3 );
+    zoneObj3.zoneMesh = zone3;
 
     var geometry = new THREE.PlaneGeometry( 15, 15 );
     var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(0,0,120)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
@@ -284,6 +312,7 @@ function createZones(){
     zone1.position.set(-8, 2, -7.5);
     zone1.rotation.x = Math.PI/2;
     scene.add( zone1 );
+    zoneObj1.zoneMesh = zone1;
 
     var geometry = new THREE.PlaneGeometry( 15.2, 15 );
     var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(120,0,0)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
@@ -291,6 +320,7 @@ function createZones(){
     zone2.position.set(7, 2, -7.5);
     zone2.rotation.x = Math.PI/2;
     scene.add( zone2 );
+    zoneObj2.zoneMesh = zone2;
 
     var geometry = new THREE.PlaneGeometry( 15, 15 );
     var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(120,0,120)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
@@ -298,7 +328,24 @@ function createZones(){
     zone4.position.set(-8, 2, 7.5);
     zone4.rotation.x = Math.PI/2;
     scene.add( zone4 );
+    zoneObj4.zoneMesh = zone4;
 
+    let group1 = new THREE.Object3D();
+    let group1Arr = [];
+    zoneObj1.group = group1;
+    zoneObj1.dotArr = group1Arr;
+    let group2 = new THREE.Object3D();
+    let group2Arr = [];
+    zoneObj2.group = group2;
+    zoneObj2.dotArr = group2Arr;
+    let group3 = new THREE.Object3D();
+    let group3Arr = [];
+    zoneObj3.group = group3;
+    zoneObj3.dotArr = group3Arr;
+    let group4 = new THREE.Object3D();
+    let group4Arr = [];
+    zoneObj4.group = group4;
+    zoneObj4.dotArr = group4Arr;
 
     for(let i = 0; i < cityBlocks.length; i++){
         for(let j = 0; j < cityBlocks[i].length; j++){
@@ -319,23 +366,42 @@ function createZones(){
                 if(i < 15 && j < 15){
                     zones.zone1.push(tempPos)
                     dotMaterial.color = new THREE.Color("rgb(0,0,120)");
+                    let dot = new THREE.Points(dotGeometry, dotMaterial);
+                    group1Arr.push(dot);
+                    group1.add(dot);
                 }else if(i >= 15 && j < 15){
                     zones.zone2.push(tempPos)
                     dotMaterial.color = new THREE.Color("rgb(120,0,0)");
+                    let dot = new THREE.Points(dotGeometry, dotMaterial);
+                    group2Arr.push(dot);
+                    group2.add(dot);
                 }else if(i >= 15 && j > 15){
                     zones.zone3.push(tempPos)
                     dotMaterial.color = new THREE.Color("rgb(0,120,0)");
+                    let dot = new THREE.Points(dotGeometry, dotMaterial);
+                    group3Arr.push(dot)
+                    group3.add(dot);
                 }else if(i < 15 && j > 15){
                     zones.zone4.push(tempPos)
                     dotMaterial.color = new THREE.Color("rgb(120,0,120)");
+                    let dot = new THREE.Points(dotGeometry, dotMaterial);
+                    group4Arr.push(dot)
+                    group4.add(dot);
                 }
-                var dot = new THREE.Points(dotGeometry, dotMaterial);
-                scene.add(dot);
+                
+                scene.add(group1);
+                scene.add(group2);
+                scene.add(group3);
+                scene.add(group4);
             }
         }
     }
 
     
+}
+
+function showZone(n){
+
 }
 
 function chooseHouseType(i,j){
