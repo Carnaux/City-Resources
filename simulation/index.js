@@ -90,11 +90,10 @@ var mouse = new THREE.Vector2();
        
 var scene = new THREE.Scene();
 scene.background = new THREE.Color("rgb(255,255,255)");
-// var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 
 var aspect = window.innerWidth / window.innerHeight;
 var d = 20;
-camera = new THREE.OrthographicCamera( - d * aspect, d * aspect, d, - d, 1, 1000 );
+camera = new THREE.OrthographicCamera( - d * aspect, d * aspect, d, - d, 1, 2000 );
 
 camera.position.set( 0, 45, 10); 
 camera.lookAt( scene.position ); 
@@ -125,20 +124,6 @@ var materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(
 consumptionValues();
 
 importPrefabs();
-
-// var dotGeometry = new THREE.Geometry();
-// dotGeometry.vertices.push(new THREE.Vector3(0,15,0));
-
-// var dotMaterial = new THREE.PointsMaterial({
-// size: 10,
-// sizeAttenuation: false,
-// color: new THREE.Color("rgb(120,120,0)"),
-// });
-// let dot1 = new THREE.Points(dotGeometry, dotMaterial);
-// scene.add(dot1);
-
-
-
 
 // window.addEventListener( 'mousedown', onDocumentMouseDown, false );
 // window.addEventListener( 'mousemove', onDocumentMouseMove, false );
@@ -498,7 +483,7 @@ function createZones(){
 
     scene.add(spriteGroup);
     
-    }
+}
 
 function updateZones(n){
     lastResource = n;
@@ -532,13 +517,13 @@ function interpolateDot(dot, total, t, c){
             value = total[2];
         }
     }else if(t == 2){
-        if(c == 1){
+        if(c == 3){
             max = highestWater.eco;
             value = total[0];
         }else if(c == 2){
             max = highestWater.norm;
             value = total[1];
-        }else if(c == 3){
+        }else if(c == 1){
             max = highestWater.high;
             value = total[2];
         }
