@@ -17,12 +17,17 @@ let roadIntervalY = 0;
 
 let highestEnergy = 0;
 let highestWater = 0;
+let highestPeople = 0;
 
 let maxColor = new THREE.Vector3(255,0,0);
 let minColor = new THREE.Vector3(0,0,255);
 
 let maxHeight = 10;
 let minHeight = 0;
+
+let spriteGroup = new THREE.Object3D();
+
+let zoneObjArr = [];
 
 let zoneObj1, zoneObj2, zoneObj3, zoneObj4;
 
@@ -31,6 +36,13 @@ let zones = {
     zone2: [],
     zone3: [],
     zone4: []
+}
+
+let zoneState = {
+    zone1: false,
+    zone2: false,
+    zone3: false,
+    zone4: false
 }
 
 let allDots = [];
@@ -71,7 +83,7 @@ var aspect = window.innerWidth / window.innerHeight;
 var d = 20;
 camera = new THREE.OrthographicCamera( - d * aspect, d * aspect, d, - d, 1, 1000 );
 
-camera.position.set( 35, 20, 35 ); 
+camera.position.set( 0, 45, 10); 
 camera.lookAt( scene.position ); 
 
 var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.8 );
@@ -92,6 +104,7 @@ let renderDiv = document.getElementById("renderDiv");
 renderDiv.appendChild( renderer.domElement );
 
 var controls = new THREE.OrbitControls( camera,  renderer.domElement);
+console.log(controls);
 
 var geometryGround = new THREE.BoxGeometry( 1, 1, 1 );
 var materialGround = new THREE.MeshBasicMaterial( { color: new THREE.Color("rgb(139,69,19)") } );
@@ -110,6 +123,7 @@ importPrefabs();
 // });
 // let dot1 = new THREE.Points(dotGeometry, dotMaterial);
 // scene.add(dot1);
+
 
 
 
@@ -290,10 +304,13 @@ function generateCity(sizeX, sizeY){
     roadCorners.position.copy(cityBlocksMeshes[0][0].position);
     roadCorners.position.y += 0.5;
     scene.add(roadCorners);
+    calculateData();
 
     console.log("energy",highestEnergy);
     console.log("water", highestWater);
-    createZones()
+
+    createZones();
+    updateZones(1)
 }
 
 function createZones(){
@@ -304,30 +321,35 @@ function createZones(){
         dotArr: null,
         indexArr: null,
     };
+    zoneObjArr.push(zoneObj1);
     zoneObj2 = {
         zoneMesh: null,
         group: null,
         dotArr: null,
         indexArr: null,
     };
+    zoneObjArr.push(zoneObj2);
     zoneObj3 = {
         zoneMesh: null,
         group: null,
         dotArr: null,
         indexArr: null,
     };
+    zoneObjArr.push(zoneObj3);
     zoneObj4 = {
         zoneMesh: null,
         group: null,
         dotArr: null,
         indexArr: null,
     };
+    zoneObjArr.push(zoneObj4);
 
     var geometry = new THREE.PlaneGeometry( 15.2, 15 );
     var material = new THREE.MeshBasicMaterial( {color: new THREE.Color("rgb(0,120,0)"), transparent: true, opacity: 0.75, side: THREE.DoubleSide } );
     let zone3 = new THREE.Mesh( geometry, material );
     zone3.position.set(7, 2, 7.5);
     zone3.rotation.x = Math.PI/2;
+    zone3.visible = false;
     scene.add( zone3 );
     zoneObj3.zoneMesh = zone3;
 
@@ -337,6 +359,7 @@ function createZones(){
     zone1.position.set(-8, 2, -7.5);
     zone1.rotation.x = Math.PI/2;
     scene.add( zone1 );
+    zone1.visible = false;
     zoneObj1.zoneMesh = zone1;
 
     var geometry = new THREE.PlaneGeometry( 15.2, 15 );
@@ -345,6 +368,7 @@ function createZones(){
     zone2.position.set(7, 2, -7.5);
     zone2.rotation.x = Math.PI/2;
     scene.add( zone2 );
+    zone2.visible = false;
     zoneObj2.zoneMesh = zone2;
 
     var geometry = new THREE.PlaneGeometry( 15, 15 );
@@ -353,6 +377,7 @@ function createZones(){
     zone4.position.set(-8, 2, 7.5);
     zone4.rotation.x = Math.PI/2;
     scene.add( zone4 );
+    zone4.visible = false;
     zoneObj4.zoneMesh = zone4;
 
     let group1 = new THREE.Object3D();
@@ -419,20 +444,62 @@ function createZones(){
                 }
                 
                 scene.add(group1);
+                group1.visible = false;
                 scene.add(group2);
+                group2.visible = false;
                 scene.add(group3);
+                group3.visible = false;
                 scene.add(group4);
+                group4.visible = false;
             }
         }
     }
 
-    updateZones(1);
-}
+    var spriteMap = new THREE.TextureLoader().load( "sprite.png" );
+    var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
+    var scale = new THREE.Sprite( spriteMaterial );
+    scale.position.set(16,8,0);
+    scale.scale.set(15,12,1);
+
+    spriteGroup.add(scale);
+
+    var scale2 = new THREE.Sprite( spriteMaterial );
+    scale2.position.set(16,24,0);
+    scale2.scale.set(15,20,1);
+    spriteGroup.add(scale2);
+
+    var map0 = new THREE.TextureLoader().load( "0.png" );
+    var spriteMaterial = new THREE.SpriteMaterial( { map: map0, color: 0xffffff } );
+    var number0 = new THREE.Sprite( spriteMaterial );
+    number0.position.set(19,2,0);
+    number0.scale.set(1.5,1.5,1);
+    spriteGroup.add(number0);
+
+    var map6 = new THREE.TextureLoader().load( "6.png" );
+    var spriteMaterial = new THREE.SpriteMaterial( { map: map6, color: 0xffffff } );
+    var number6 = new THREE.Sprite( spriteMaterial );
+    number6.position.set(19,14,0);
+    number6.scale.set(1.5,1.5,1);
+    number6.rotation._y = Math.PI/2;
+    spriteGroup.add(number6);
+
+    scene.add(spriteGroup);
+    
+    }
 
 function updateZones(n){
     if(n == 1){
         for(let i = 0; i < buildingsConsumption.length; i++){
             interpolateDot(allDots[i], buildingsConsumption[i].energy.total, 1);
+        }
+    }else if(n == 2){
+        for(let i = 0; i < buildingsConsumption.length; i++){
+            interpolateDot(allDots[i], buildingsConsumption[i].water.total, 2);
+        }
+    }else if(n == 3){
+        console.log("total peps", cityConsumption.people)
+        for(let i = 0; i < buildingsConsumption.length; i++){
+            interpolateDot(allDots[i], buildingsConsumption[i].people, 3);
         }
     }
 }
@@ -441,11 +508,17 @@ function interpolateDot(dot, total, t){
     let max = 0;
     if(t == 1){
         max = highestEnergy;
-    }else{
+    }else if(t == 2){
         max = highestWater;
+    }else if(t == 3){
+        max = highestPeople;
     }
 
     let fraction = total/max;  
+    if(t == 3){
+    //    fraction = fraction * 100;
+       console.log(fraction)
+    }
         
     R =  parseInt((maxColor.x - minColor.x) * fraction + minColor.x);
     G =  parseInt((maxColor.y - minColor.y) * fraction + minColor.y);
@@ -455,20 +528,103 @@ function interpolateDot(dot, total, t){
 
     let tempMaxHeight = maxHeight;
     let tempMinHeight = minHeight;
-    if(fraction < 0.01){
-        tempMaxHeight = 1200;
+    if(fraction < 0.01){      
+        tempMaxHeight = 1200;    
     }else{
         tempMaxHeight = 30;
         tempMinHeight = 12;
+        if(t == 3){
+            tempMinHeight = 0;
+        }
     }
-    let y = parseInt((tempMaxHeight - tempMinHeight) * fraction + tempMinHeight);
+    let y = (tempMaxHeight - tempMinHeight) * fraction + tempMinHeight;
 
     dot.position.set(dot.position.x, y, dot.position.z);
-    console.log(fraction)
+    if(t == 3){
+        console.log("people", total, "y", y);
+    }
 }
 
 function showZone(n){
+    // Object.keys(zoneState).map(function(Key, index) {
+    //     var value = object[Key];
+        
+    // });
 
+   if(n == 1){
+        if(zoneState.zone1){
+            zoneState.zone1 = false;
+        
+            zoneObjArr[0].zoneMesh.visible = false;
+            zoneObjArr[0].group.visible = false;
+        }else{
+            zoneState.zone1 = true;
+
+            zoneObjArr[0].zoneMesh.visible = true;
+            zoneObjArr[0].group.visible = true;
+        }
+   }else if(n == 2){
+        if(zoneState.zone2){
+            zoneState.zone2 = false;
+        
+            zoneObjArr[1].zoneMesh.visible = false;
+            zoneObjArr[1].group.visible = false;
+        }else{
+            zoneState.zone2 = true;
+
+            zoneObjArr[1].zoneMesh.visible = true;
+            zoneObjArr[1].group.visible = true;
+        }
+   }else if(n == 3){
+        if(zoneState.zone3){
+            zoneState.zone3 = false;
+        
+            zoneObjArr[2].zoneMesh.visible = false;
+            zoneObjArr[2].group.visible = false;
+        }else{
+            zoneState.zone3 = true;
+
+            zoneObjArr[2].zoneMesh.visible = true;
+            zoneObjArr[2].group.visible = true;
+        }
+   }else if(n == 4){
+        if(zoneState.zone4){
+            zoneState.zone4 = false;
+        
+            zoneObjArr[3].zoneMesh.visible = false;
+            zoneObjArr[3].group.visible = false;
+        }else{
+            zoneState.zone4 = true;
+
+            zoneObjArr[3].zoneMesh.visible = true;
+            zoneObjArr[3].group.visible = true;
+        }
+   }else if(n == 5){
+        if(zoneState.zone1 && zoneState.zone2 && zoneState.zone3 && zoneState.zone4){
+            zoneState.zone1 = false;
+            zoneState.zone2 = false;
+            zoneState.zone3 = false;
+            zoneState.zone4 = false;
+
+            for(let i = 0; i < zoneObjArr.length; i++){
+                zoneObjArr[i].zoneMesh.visible = false;
+                zoneObjArr[i].group.visible = false;
+            }
+
+
+        }else{
+            zoneState.zone1 = true;
+            zoneState.zone2 = true;
+            zoneState.zone3 = true;
+            zoneState.zone4 = true;
+
+            for(let i = 0; i < zoneObjArr.length; i++){
+                
+                zoneObjArr[i].zoneMesh.visible = true;
+                zoneObjArr[i].group.visible = true;
+            }
+        }
+   }
 }
 
 function chooseHouseType(i,j){
@@ -864,6 +1020,10 @@ function calculateTotal(){
 
         cityConsumption.energy[3] += Math.floor(buildingsConsumption[i].dayCycle.energy[3]);
         cityConsumption.water[3] += Math.floor(buildingsConsumption[i].dayCycle.water[3]);
+
+        if(buildingsConsumption[i].people > highestPeople){
+            highestPeople = buildingsConsumption[i].people;
+        }
 
         cityConsumption.people += buildingsConsumption[i].people;
     }
@@ -1697,8 +1857,6 @@ function calculateWater(q){
     let qProduction = ((Q * k1 * 24)/t) * (1 + (wc/100));
 
     let qDistribution = (Q * k1 * k2);
-    
-    console.log((qProduction) );
     
     let water = {
         production: (qProduction * 86400 * 30)/Math.pow(10, 9),

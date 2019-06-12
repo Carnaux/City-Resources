@@ -133,13 +133,16 @@
     </div>
 
     <div id="houseData" class="fas fa-home" style="font-size: 30px; text-align: center;">
-        <div id="zones">
+        <div id="zones" class="far fa-square" style="font-size: 30px; text-align: center;">
             <div id="zone1" onclick="showZone('1')"></div>
             <div id="zone2" onclick="showZone('2')"></div>
             <div id="zone3" onclick="showZone('3')"></div>
             <div id="zone4" onclick="showZone('4')"></div>
             <div id="allZones" onclick="showZone('5')"></div>
         </div>
+        <div id="energyEnable" class="fas fa-bolt" style="font-size: 30px; text-align: center;" onclick="updateZones('1')"></div>
+        <div id="waterEnable" class="fas fa-water" style="font-size: 30px; text-align: center;" onclick="updateZones('2')"></div>
+        <div id="qtnPeople" class="fas fa-user-friends" style="font-size: 30px; text-align: center;" onclick="updateZones('3')"></div>
     </div>
 
     <div id="mainChart">

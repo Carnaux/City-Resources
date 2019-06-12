@@ -269,24 +269,54 @@
     height: 100px;
 }
 
-
-
-#houseData:hover{
-    height: 200px;
-}
-
-#zone1{
+/*  zones */
+#zones{
     position: absolute;
     top: 50px;
     width: 50px;
     height: 50px;
-    background-color: rgb(0, 0, 120);
+    background-color: rgb(120, 120, 120);
+    display: none;
+}
+#energyEnable{
+    position: absolute;
+    top: 100px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(247, 243, 8);
+    display: none;
+}
+#waterEnable{
+    position: absolute;
+    top: 150px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(18, 1, 255);
+    display: none;
+}
+#qtnPeople{
+    position: absolute;
+    top: 200px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(18, 1, 255);
+    display: none;
+}
+
+#zone1{
+    position: absolute;
+    top: 0px;
+    left: 50px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(120,120,0);
     display: none;
 }
 
 #zone2{
     position: absolute;
-    top: 100px;
+    top: 50px;
+    left: 50px;
     width: 50px;
     height: 50px;
     background-color: rgb(120, 0, 0);
@@ -295,16 +325,17 @@
 
 #zone3{
     position: absolute;
-    top: 150px;
+    top: 100px;
+    left: 50px;
     width: 50px;
     height: 50px;
     background-color: rgb(0, 120, 0);
     display: none;
 }
-
 #zone4{
     position: absolute;
-    top: 200px;
+    top: 150px;
+    left: 50px;
     width: 50px;
     height: 50px;
     background-color: rgb(120, 0, 120);
@@ -312,28 +343,42 @@
 }
 #allZones{
     position: absolute;
-    top: 250px;
+    top: 200px;
+    left: 50px;
     width: 50px;
     height: 50px;
     background-color: rgb(120, 120, 120);
     display: none;
 }
 
-#houseData:hover #zone1{
+#houseData:hover #zones{
+    display: block;
+}
+#houseData:hover #energyEnable{
+    display: block;
+}
+#houseData:hover #waterEnable{
+    display: block;
+}
+#houseData:hover #qtnPeople{
     display: block;
 }
 
-#houseData:hover #zone2{
+#zones:hover #zone1{
     display: block;
 }
 
-#houseData:hover #zone3{
+#zones:hover #zone2{
     display: block;
 }
 
-#houseData:hover #zone4{
+#zones:hover #zone3{
     display: block;
 }
-#houseData:hover #allZones{
+
+#zones:hover #zone4{
     display: block;
 }
+#zones:hover #allZones{
+    display: block;
+} */
