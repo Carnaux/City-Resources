@@ -11,9 +11,9 @@
 </head>
 <body style="margin: 0; overflow: hidden;">
     
-    <div id="configs" class="fas fa-cog" style="font-size: 30px; text-align: center;">
+    <div id="configs" class="fas fa-cog iconStyle">
         <div id="menus">
-            <div id="menu1" class="fas fa-mountain" style="font-size: 30px; text-align: center;">
+            <div id="menu1" class="fas fa-mountain iconStyle">
                <div id="basinConfigs" >
                     River lenght (Km):
                     <br>
@@ -35,7 +35,7 @@
                </div>
               
             </div>
-            <div id="menu2" class="fas fa-bolt" style="font-size: 30px; text-align: center;">
+            <div id="menu2" class="fas fa-bolt iconStyle">
                 <div id="hydroConfigs">
                     Hydroeletric efficiency:
                     <br>
@@ -56,7 +56,7 @@
                     <canvas id="energyProduction"></canvas>
                 </div>
             </div>
-            <div id="menu3" class="fas fa-water" style="font-size: 30px; text-align: center;" >
+            <div id="menu3" class="fas fa-water iconStyle">
                 <div id="waterConfigs">
                     Coefficient of the day of greatest consumption (k1):
                     <br>
@@ -81,7 +81,7 @@
                         
                 </div>
             </div>
-            <div id="menu4" class="fas fa-cloud-rain" style="font-size: 30px; text-align: center;" >
+            <div id="menu4" class="fas fa-cloud-rain iconStyle">
                     <div id="rainConfigs">
                         <!-- <p id="rainTitle" style="text-align: center">Effective Rain</p> -->
                         
@@ -121,28 +121,33 @@
                         <canvas id="effectiveGraph"></canvas>
                     </div>
             </div>
-            <div id="menu5" class="fas fa-home" style="font-size: 30px; text-align: center;" >
+            <div id="menu5" class="fas fa-home iconStyle">
                 <div id="popData">
                     <p id="pop"></p>
                     <canvas id="energyBalance"></canvas>
                     <canvas id="finalChart"></canvas>
                 </div>
             </div>
-            <div id="applyBt" onclick="calculateData()" class="fas fa-check" style="font-size: 30px; text-align: center;" data-toggle="tooltip" title="Apply/Simulate"></div>
+            <div id="applyBt" onclick="calculateData()" class="fas fa-check iconStyle" data-toggle="tooltip" title="Apply/Simulate"></div>
         </div>
     </div>
 
-    <div id="houseData" class="fas fa-home" style="font-size: 30px; text-align: center;">
-        <div id="zones" class="far fa-square" style="font-size: 30px; text-align: center;">
+    <div id="houseData" class="fas fa-chart-bar iconStyle">
+        <div id="zones" class="far fa-square iconStyle">
             <div id="zone1" onclick="showZone('1')"></div>
             <div id="zone2" onclick="showZone('2')"></div>
             <div id="zone3" onclick="showZone('3')"></div>
             <div id="zone4" onclick="showZone('4')"></div>
             <div id="allZones" onclick="showZone('5')"></div>
         </div>
-        <div id="energyEnable" class="fas fa-bolt" style="font-size: 30px; text-align: center;" onclick="updateZones('1')"></div>
-        <div id="waterEnable" class="fas fa-water" style="font-size: 30px; text-align: center;" onclick="updateZones('2')"></div>
-        <div id="qtnPeople" class="fas fa-user-friends" style="font-size: 30px; text-align: center;" onclick="updateZones('3')"></div>
+        <div id="energyEnable" class="fas fa-bolt iconStyle" onclick="updateZones('1')"></div>
+        <div id="waterEnable" class="fas fa-water iconStyle" onclick="updateZones('2')"></div>
+        <div id="qtnPeople" class="fas fa-user-friends iconStyle" onclick="updateZones('3')"></div>
+        <div id="consumeType" class="fas fa-leaf iconStyle">
+            <div id="ecoConsume" class="fas fa-minus iconStyle" onclick="setConsumeType('1')"></div>
+            <div id="normConsume" class="fas fa-slash iconStyle" onclick="setConsumeType('2')"></div>
+            <div id="highConsume" class="fas fa-plus iconStyle" onclick="setConsumeType('3')"></div>
+        </div>
     </div>
 
     <div id="mainChart">

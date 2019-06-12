@@ -1,3 +1,8 @@
+.iconStyle{
+    font-size: 30px; 
+    text-align: center;
+}
+
 #configs{
     position: absolute;
     top: 0;
@@ -299,6 +304,14 @@
     top: 200px;
     width: 50px;
     height: 50px;
+    background-color: rgb(14, 161, 149);
+    display: none;
+}
+#consumeType{
+    position: absolute;
+    top: 250px;
+    width: 50px;
+    height: 50px;
     background-color: rgb(18, 1, 255);
     display: none;
 }
@@ -322,7 +335,6 @@
     background-color: rgb(120, 0, 0);
     display: none;
 }
-
 #zone3{
     position: absolute;
     top: 100px;
@@ -351,6 +363,37 @@
     display: none;
 }
 
+#ecoConsume{
+    position: absolute;
+    top: 0px;
+    left: 50px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(17, 192, 11);
+    display: none;
+}
+
+#normConsume{
+    position: absolute;
+    top: 50px;
+    left: 50px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(150, 150, 150);
+    display: none;
+}
+
+#highConsume{
+    position: absolute;
+    top: 100px;
+    left: 50px;
+    width: 50px;
+    height: 50px;
+    background-color: rgb(197, 26, 20);
+    display: none;
+}
+
+
 #houseData:hover #zones{
     display: block;
 }
@@ -363,6 +406,10 @@
 #houseData:hover #qtnPeople{
     display: block;
 }
+#houseData:hover #consumeType{
+    display: block;
+}
+
 
 #zones:hover #zone1{
     display: block;
@@ -375,10 +422,19 @@
 #zones:hover #zone3{
     display: block;
 }
-
 #zones:hover #zone4{
     display: block;
 }
 #zones:hover #allZones{
     display: block;
-} */
+} 
+
+#consumeType:hover #ecoConsume{
+    display: block;
+}
+#consumeType:hover #normConsume{
+    display: block;
+}
+#consumeType:hover #highConsume{
+    display: block;
+}

@@ -2,6 +2,8 @@ let cityBlocks = [];
 let cityBlocksMeshes = [];
 let buildingsMeshes = [];
 let buildingsTypes = [];
+let economicConsumption = [];
+let highConsumption = [];
 let buildingsConsumption = [];
 let buildingsConsumptionAnnual = [];
 let roadsMeshes = [];
@@ -15,8 +17,19 @@ let crossroads;
 let roadIntervalX = 0;
 let roadIntervalY = 0;
 
-let highestEnergy = 0;
-let highestWater = 0;
+let consumeType = 2;
+let lastResource = 0;
+
+let highestEnergy = {
+    eco: 0,
+    norm: 0,
+    high: 0
+}
+let highestWater = {
+    eco: 0,
+    norm: 0,
+    high: 0
+};
 let highestPeople = 0;
 
 let maxColor = new THREE.Vector3(255,0,0);
@@ -488,36 +501,56 @@ function createZones(){
     }
 
 function updateZones(n){
+    lastResource = n;
     if(n == 1){
         for(let i = 0; i < buildingsConsumption.length; i++){
-            interpolateDot(allDots[i], buildingsConsumption[i].energy.total, 1);
+            interpolateDot(allDots[i], buildingsConsumption[i].energy.total, 1, consumeType);
         }
     }else if(n == 2){
         for(let i = 0; i < buildingsConsumption.length; i++){
-            interpolateDot(allDots[i], buildingsConsumption[i].water.total, 2);
+            interpolateDot(allDots[i], buildingsConsumption[i].water.total, 2, consumeType);
         }
     }else if(n == 3){
-        console.log("total peps", cityConsumption.people)
         for(let i = 0; i < buildingsConsumption.length; i++){
-            interpolateDot(allDots[i], buildingsConsumption[i].people, 3);
+            interpolateDot(allDots[i], buildingsConsumption[i].people, 3, consumeType);
         }
     }
 }
 
-function interpolateDot(dot, total, t){
+function interpolateDot(dot, total, t, c){
     let max = 0;
+    let value;
     if(t == 1){
-        max = highestEnergy;
+        if(c == 3){
+            max = highestEnergy.eco;
+            value = total[0];
+        }else if(c == 2){
+            max = highestEnergy.norm;
+            value = total[1];
+        }else if(c == 1){
+            max = highestEnergy.high;
+            value = total[2];
+        }
     }else if(t == 2){
-        max = highestWater;
+        if(c == 1){
+            max = highestWater.eco;
+            value = total[0];
+        }else if(c == 2){
+            max = highestWater.norm;
+            value = total[1];
+        }else if(c == 3){
+            max = highestWater.high;
+            value = total[2];
+        }
     }else if(t == 3){
         max = highestPeople;
+        value = total;
     }
 
-    let fraction = total/max;  
+    let fraction = value/max;  
     if(t == 3){
     //    fraction = fraction * 100;
-       console.log(fraction)
+       
     }
         
     R =  parseInt((maxColor.x - minColor.x) * fraction + minColor.x);
@@ -540,9 +573,7 @@ function interpolateDot(dot, total, t){
     let y = (tempMaxHeight - tempMinHeight) * fraction + tempMinHeight;
 
     dot.position.set(dot.position.x, y, dot.position.z);
-    if(t == 3){
-        console.log("people", total, "y", y);
-    }
+   
 }
 
 function showZone(n){
@@ -971,14 +1002,27 @@ function generateConsumption(){
         let energyConsumption = generateEnergyConsumption(energy, useFrequency);
         let waterConsumption = generateWaterConsumption(water, useFrequency);
 
-        let energyTotal = Math.floor(sumObjs(energyConsumption));
-        let waterTotal =  Math.floor(sumObjs(waterConsumption));
+        let energyTotal = sumObjs(energyConsumption);
+        let waterTotal =  sumObjs(waterConsumption);
         
-        if(energyTotal > highestEnergy){
-            highestEnergy = energyTotal;
+        if(energyTotal[0] > highestEnergy.eco){
+            highestEnergy.eco = energyTotal[0];
         }
-        if(waterTotal > highestWater){
-            highestWater = waterTotal;
+        if(energyTotal[1] > highestEnergy.norm){
+            highestEnergy.norm = energyTotal[1];
+        }
+        if(energyTotal[2] > highestEnergy.high){
+            highestEnergy.high = energyTotal[2];
+        }
+
+        if(waterTotal[0] > highestWater.eco){
+            highestWater.eco = waterTotal[0];
+        }
+        if(waterTotal[1] > highestWater.norm){
+            highestWater.norm = waterTotal[1];
+        }
+        if(waterTotal[2] > highestWater.high){
+            highestWater.high = waterTotal[2];
         }
 
         let distribution = distributeEnergy(energyTotal, waterTotal);
@@ -1067,57 +1111,7 @@ function createChart(){
     let db = annualCityConsumption;
 
     Chart.defaults.global.defaultFontColor = 'black';
-    let ctx = document.getElementById('myChart').getContext('2d');
-    chart = new Chart(ctx, {
-        // The type of chart we want to create
-        type: 'bar',
-
-        // The data for our dataset
-        data: {
-            labels: ['jan', 'feb', 'mar','apr','may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'],
-            datasets: [{
-                label: "Energy (GW/h)",
-                backgroundColor: 'rgb(255, 99, 132)',
-                borderColor: 'rgb(255, 99, 132)',
-                
-                data: [db.energy[0]/Math.pow(10, 6), db.energy[1]/Math.pow(10, 6), db.energy[2]/Math.pow(10, 6),
-                       db.energy[3]/Math.pow(10, 6), db.energy[4]/Math.pow(10, 6), db.energy[5]/Math.pow(10, 6),
-                       db.energy[6]/Math.pow(10, 6), db.energy[7]/Math.pow(10, 6), db.energy[8]/Math.pow(10, 6),
-                       db.energy[9]/Math.pow(10, 6), db.energy[10]/Math.pow(10, 6), db.energy[11]/Math.pow(10, 6)]
-            },
-            {
-                label: "Water (L /10^6)",
-                backgroundColor: 'rgb(50, 50, 90)',
-                borderColor: 'rgb(50, 50, 90)',
-                
-                data: [db.water[0]/Math.pow(10,6), db.water[1]/Math.pow(10,6), db.water[2]/Math.pow(10,6),
-                       db.water[3]/Math.pow(10,6), db.water[4]/Math.pow(10,6), db.water[5]/Math.pow(10,6),
-                       db.water[6]/Math.pow(10,6), db.water[7]/Math.pow(10,6), db.water[8]/Math.pow(10,6),
-                       db.water[9]/Math.pow(10,6), db.water[10]/Math.pow(10,6), db.water[11]/Math.pow(10,6)]
-            }
-        ]
-        },
-
-        // Configuration options go here
-        options: {
-            maintainAspectRatio: false,
-            scales: {
-                xAxes: [{
-                    gridLines: {
-                        color: 'rgb(0, 0, 0)'
-                    },
-                }],
-                yAxes: [{
-                    gridLines: {
-                        color: 'rgb(0, 0, 0)'
-                    },
-                }]
-            }
-        }
-    });
-
-    
-
+  
     let rain = document.getElementById('rainGraph').getContext('2d');
     rainChart = new Chart(rain, {
         // The type of chart we want to create
@@ -1413,7 +1407,7 @@ function createChart(){
     });
 
 
-    chart.update();
+    
     rainChart.update();
     effectiveChart.update();
     flowChart.update();
@@ -1421,7 +1415,21 @@ function createChart(){
 }
 
 function sumObjs(obj){
-    return Object.values(obj).reduce((a, b) => a + b);  
+    let sum = 0;
+    let sumArr = [];
+    Object.keys(obj).map(function(Key, index) {
+        var value = obj[Key];
+        sum = Object.values(value).reduce((a, b) => a + b);
+        sumArr.push(Math.floor(sum));
+    });
+    
+
+    return sumArr;
+}
+
+function setConsumeType(n){
+    consumeType = n;
+    updateZones(lastResource);
 }
 
 function generatePeople(type){
@@ -1516,14 +1524,40 @@ function generateEnergyConsumption(energy, f, days){
         d = days;
     }
 
-    let tempObj = {
-        lamp: (energy.lamp * consumptionTable.energy.lamp * f.lamp * d)/1000,
-        shower: (energy.shower * consumptionTable.energy.shower * f.shower * d)/1000,
+    let economic = {
+        lamp: (energy.lamp * consumptionTable.energy.lamp * f.economic.lamp * d)/1000,
+        shower: (energy.shower * consumptionTable.energy.shower * f.economic.shower * d)/1000,
+        freezer: (energy.freezer * consumptionTable.energy.freezer * 8 * d)/1000,
+        dish: (energy.dish * consumptionTable.energy.dish * f.economic.dish * d)/1000,
+        tv: (energy.tv * consumptionTable.energy.tv * f.economic.tv * d)/1000,
+        washer: (energy.washer * consumptionTable.energy.washer * f.economic.washer * d)/1000,
+        dryer: (energy.dryer * consumptionTable.energy.dryer * f.economic.dryer * d)/1000,
+    }
+
+    let normal = {
+        lamp: (energy.lamp * consumptionTable.energy.lamp * f.normal.lamp * d)/1000,
+        shower: (energy.shower * consumptionTable.energy.shower * f.normal.shower * d)/1000,
         freezer: (energy.freezer * consumptionTable.energy.freezer * 10 * d)/1000,
-        dish: (energy.dish * consumptionTable.energy.dish * f.dish * d)/1000,
-        tv: (energy.tv * consumptionTable.energy.tv * f.tv * d)/1000,
-        washer: (energy.washer * consumptionTable.energy.washer * f.washer * d)/1000,
-        dryer: (energy.dryer * consumptionTable.energy.dryer * f.dryer * d)/1000,
+        dish: (energy.dish * consumptionTable.energy.dish * f.normal.dish * d)/1000,
+        tv: (energy.tv * consumptionTable.energy.tv * f.normal.tv * d)/1000,
+        washer: (energy.washer * consumptionTable.energy.washer * f.normal.washer * d)/1000,
+        dryer: (energy.dryer * consumptionTable.energy.dryer * f.normal.dryer * d)/1000,
+    }
+
+    let high = {
+        lamp: (energy.lamp * consumptionTable.energy.lamp * f.high.lamp * d)/1000,
+        shower: (energy.shower * consumptionTable.energy.shower * f.high.shower * d)/1000,
+        freezer: (energy.freezer * consumptionTable.energy.freezer * 16 * d)/1000,
+        dish: (energy.dish * consumptionTable.energy.dish * f.high.dish * d)/1000,
+        tv: (energy.tv * consumptionTable.energy.tv * f.high.tv * d)/1000,
+        washer: (energy.washer * consumptionTable.energy.washer * f.high.washer * d)/1000,
+        dryer: (energy.dryer * consumptionTable.energy.dryer * f.high.dryer * d)/1000,
+    }
+
+    let tempObj = {
+        economic: economic,
+        normal: normal,
+        high: high
     }
 
     return tempObj;
@@ -1534,14 +1568,34 @@ function generateWaterConsumption(water, f, days){
     if(days != null){
         d = days;
     }
+    let economic = {
+        sink: (water.sink * consumptionTable.water.sink * f.economic.sink * d),
+        toilet: (water.toilet * consumptionTable.water.toilet * f.economic.toilet * d),
+        shower: (water.shower * consumptionTable.water.shower * f.economic.shower * d),
+        dish: (water.dish * consumptionTable.water.dish * f.economic.dish * d),
+        washer: (water.washer * consumptionTable.water.washer * f.economic.washer * d),
+    }
 
+    let normal = {
+        sink: (water.sink * consumptionTable.water.sink * f.normal.sink * d),
+        toilet: (water.toilet * consumptionTable.water.toilet * f.normal.toilet * d),
+        shower: (water.shower * consumptionTable.water.shower * f.normal.shower * d),
+        dish: (water.dish * consumptionTable.water.dish * f.normal.dish * d),
+        washer: (water.washer * consumptionTable.water.washer * f.normal.washer * d),
+    }
+
+    let high = {
+        sink: (water.sink * consumptionTable.water.sink * f.high.sink * d),
+        toilet: (water.toilet * consumptionTable.water.toilet * f.high.toilet * d),
+        shower: (water.shower * consumptionTable.water.shower * f.high.shower * d),
+        dish: (water.dish * consumptionTable.water.dish * f.high.dish * d),
+        washer: (water.washer * consumptionTable.water.washer * f.high.washer * d),
+    }
 
     let tempObj = {
-        sink: (water.sink * consumptionTable.water.sink * f.sink * d),
-        toilet: (water.toilet * consumptionTable.water.toilet * f.toilet * d),
-        shower: (water.shower * consumptionTable.water.shower * f.shower * d),
-        dish: (water.dish * consumptionTable.water.dish * f.dish * d),
-        washer: (water.washer * consumptionTable.water.washer * f.washer * d),
+        economic: economic,
+        normal: normal,
+        high: high
     }
 
     return tempObj;
@@ -1549,15 +1603,41 @@ function generateWaterConsumption(water, f, days){
 
 function randomizeUsage(p){
 
-    let tempObj = {
+    let normal = {
         lamp: Math.floor(Math.random() * 21),
         shower: p * (Math.floor(Math.random() * 3) + 1),
         dish: Math.floor(Math.random() * 4),
         tv: Math.floor(Math.random() * 21),
         washer: Math.floor(Math.random() * 3),
         dryer: Math.floor(Math.random() * 3),
-        toilet: p * Math.floor(Math.random() * 10) ,
+        toilet: p * Math.floor(Math.random() * 10),
         sink: p * Math.floor(Math.random() * 10),
+    }
+    let economic = {
+        lamp: Math.floor(Math.random() * 21),
+        shower: p * (Math.floor(Math.random() * 2) + 1),
+        dish: Math.floor(Math.random() * 2),
+        tv: Math.floor(Math.random() * 21),
+        washer: Math.floor(Math.random() * 2),
+        dryer: Math.floor(Math.random() * 2),
+        toilet: p * Math.floor(Math.random() * 6),
+        sink: p * Math.floor(Math.random() * 5),
+    }
+    let high = {
+        lamp: Math.floor(Math.random() * 21),
+        shower: p * (Math.floor(Math.random() * 6) + 1),
+        dish: Math.floor(Math.random() * 6),
+        tv: Math.floor(Math.random() * 21),
+        washer: Math.floor(Math.random() * 6),
+        dryer: Math.floor(Math.random() * 6),
+        toilet: p * Math.floor(Math.random() * 18),
+        sink: p * Math.floor(Math.random() * 18),
+    }
+
+    let tempObj = {
+        economic: economic,
+        normal: normal,
+        high: high
     }
 
     return tempObj;
