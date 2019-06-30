@@ -80,11 +80,21 @@ let cityConsumption = {
 };
 
 let annualCityConsumption = {
-    energy:[0,0,0,0,0,0,0,0,0,0,0,0],
-    water: [0,0,0,0,0,0,0,0,0,0,0,0],
+    energy:{
+        eco: [0,0,0,0,0,0,0,0,0,0,0,0],
+        norm: [0,0,0,0,0,0,0,0,0,0,0,0],
+        high: [0,0,0,0,0,0,0,0,0,0,0,0]
+    },
+    water: {
+        eco: [0,0,0,0,0,0,0,0,0,0,0,0],
+        norm: [0,0,0,0,0,0,0,0,0,0,0,0],
+        high: [0,0,0,0,0,0,0,0,0,0,0,0]
+    },
     totalEnergy: 0,
     totalWater: 0
 }
+
+let energyArr = [];
 
 var mouse = new THREE.Vector2();
        
@@ -453,35 +463,35 @@ function createZones(){
         }
     }
 
-    var spriteMap = new THREE.TextureLoader().load( "sprite.png" );
-    var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
-    var scale = new THREE.Sprite( spriteMaterial );
-    scale.position.set(16,8,0);
-    scale.scale.set(15,12,1);
+    // var spriteMap = new THREE.TextureLoader().load( "sprite.png" );
+    // var spriteMaterial = new THREE.SpriteMaterial( { map: spriteMap, color: 0xffffff } );
+    // var scale = new THREE.Sprite( spriteMaterial );
+    // scale.position.set(16,8,0);
+    // scale.scale.set(15,12,1);
 
-    spriteGroup.add(scale);
+    // spriteGroup.add(scale);
 
-    var scale2 = new THREE.Sprite( spriteMaterial );
-    scale2.position.set(16,24,0);
-    scale2.scale.set(15,20,1);
-    spriteGroup.add(scale2);
+    // var scale2 = new THREE.Sprite( spriteMaterial );
+    // scale2.position.set(16,24,0);
+    // scale2.scale.set(15,20,1);
+    // spriteGroup.add(scale2);
 
-    var map0 = new THREE.TextureLoader().load( "0.png" );
-    var spriteMaterial = new THREE.SpriteMaterial( { map: map0, color: 0xffffff } );
-    var number0 = new THREE.Sprite( spriteMaterial );
-    number0.position.set(19,2,0);
-    number0.scale.set(1.5,1.5,1);
-    spriteGroup.add(number0);
+    // var map0 = new THREE.TextureLoader().load( "0.png" );
+    // var spriteMaterial = new THREE.SpriteMaterial( { map: map0, color: 0xffffff } );
+    // var number0 = new THREE.Sprite( spriteMaterial );
+    // number0.position.set(19,2,0);
+    // number0.scale.set(1.5,1.5,1);
+    // spriteGroup.add(number0);
 
-    var map6 = new THREE.TextureLoader().load( "6.png" );
-    var spriteMaterial = new THREE.SpriteMaterial( { map: map6, color: 0xffffff } );
-    var number6 = new THREE.Sprite( spriteMaterial );
-    number6.position.set(19,14,0);
-    number6.scale.set(1.5,1.5,1);
-    number6.rotation._y = Math.PI/2;
-    spriteGroup.add(number6);
+    // var map6 = new THREE.TextureLoader().load( "6.png" );
+    // var spriteMaterial = new THREE.SpriteMaterial( { map: map6, color: 0xffffff } );
+    // var number6 = new THREE.Sprite( spriteMaterial );
+    // number6.position.set(19,14,0);
+    // number6.scale.set(1.5,1.5,1);
+    // number6.rotation._y = Math.PI/2;
+    // spriteGroup.add(number6);
 
-    scene.add(spriteGroup);
+    // scene.add(spriteGroup);
     
 }
 
@@ -1030,7 +1040,7 @@ function generateConsumption(){
 
         buildingsConsumption.push(houseStats);
     }
-    console.log(buildingsConsumption[0]);
+    //console.log("building",buildingsConsumption[0]);
     
 
     calculateTotal();
@@ -1066,8 +1076,16 @@ function calculateTotal(){
 
     for(let i = 0; i < days.length; i++){
         let monthTotal = {
-            energy: 0,
-            water: 0
+            energy: {
+                eco: 0,
+                norm: 0,
+                high: 0
+            },
+            water: {
+                eco: 0,
+                norm: 0,
+                high: 0
+            }
         }
         for(let j = 0; j < buildingsConsumption.length; j++){
         
@@ -1077,15 +1095,23 @@ function calculateTotal(){
             let energyConsumption = generateEnergyConsumption(b.energy.quantity, useFrequency, days[i]);
             let waterConsumption = generateWaterConsumption(b.water.quantity, useFrequency, days[i]);
     
-            let energyTotal = Math.floor(sumObjs(energyConsumption));
-            let waterTotal =  Math.floor(sumObjs(waterConsumption));
-    
-            monthTotal.energy += energyTotal;
-            monthTotal.water += waterTotal;
+            let energyTotal = sumObjs(energyConsumption);
+            let waterTotal =  sumObjs(waterConsumption);
+           
+            monthTotal.energy.eco += energyTotal[0];
+            monthTotal.energy.norm += energyTotal[1];
+            monthTotal.energy.high += energyTotal[2];
+            monthTotal.water.eco += waterTotal[0];
+            monthTotal.water.norm += waterTotal[1];
+            monthTotal.water.high += waterTotal[2];
     
         }
-        annualCityConsumption.energy[i] = monthTotal.energy;
-        annualCityConsumption.water[i] = monthTotal.water/10;
+        annualCityConsumption.energy.eco[i] = monthTotal.energy.eco;
+        annualCityConsumption.energy.norm[i] = monthTotal.energy.norm;
+        annualCityConsumption.energy.high[i] = monthTotal.energy.high;
+        annualCityConsumption.water.eco[i] = monthTotal.water.eco/10;
+        annualCityConsumption.water.norm[i] = monthTotal.water.norm/10;
+        annualCityConsumption.water.high[i] = monthTotal.water.high/10;
     }
 
     createChart();
@@ -1399,6 +1425,59 @@ function createChart(){
     energyChart.update();
 }
 
+function updateChartMode(n){
+    let R = parseFloat(document.getElementById("r").value);
+    let consumeModeWater;
+    let consumeModeEnergy;
+
+    if(n == 1){
+        consumeModeWater = annualCityConsumption.water.eco;
+        consumeModeEnergy = annualCityConsumption.energy.eco;
+    }else if(n == 2){
+        consumeModeWater = annualCityConsumption.water.norm;
+        consumeModeEnergy = annualCityConsumption.energy.norm;
+    }else if(n == 3){
+        consumeModeWater = annualCityConsumption.water.high;
+        consumeModeEnergy = annualCityConsumption.energy.high;
+    }
+
+    let days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let waterArr = [];
+    for(let i = 0; i < consumeModeWater.length; i++){
+        let q = (consumeModeWater[i]/days[i])/cityConsumption.people;
+        let w = calculateWater(q);
+        waterArr.push(w);
+    }
+
+    waterChartUsed.config.data.datasets[0].data = [waterArr[0].production,waterArr[1].production,waterArr[2].production,waterArr[3].production,
+                                                   waterArr[4].production,waterArr[5].production,waterArr[6].production,waterArr[7].production,
+                                                   waterArr[8].production,waterArr[9].production,waterArr[10].production,waterArr[11].production];
+    waterChartUsed.update();
+
+    waterChart.config.data.datasets[0].data = [waterArr[0].distributed,waterArr[1].distributed,waterArr[2].distributed,waterArr[3].distributed,
+                                                waterArr[4].distributed,waterArr[5].distributed,waterArr[6].distributed,waterArr[7].distributed,
+                                                waterArr[8].distributed,waterArr[9].distributed,waterArr[10].distributed,waterArr[11].distributed];
+    waterChart.update();
+
+   for(let i = 0; i < 12; i++){
+        let flowEnergy = (flowChart.config.data.datasets[0].data[i]*R)/100;
+        let flowWater = (waterArr[i].production*Math.pow(10,9)/86400 * 30)/1000;
+
+        finalChart.config.data.datasets[0].data[i] = flowChart.config.data.datasets[0].data[i]-flowEnergy-flowWater;
+        finalChart.config.data.datasets[1].data[i] = flowEnergy;
+        finalChart.config.data.datasets[2].data[i] = flowWater;
+    }
+    finalChart.update();
+
+    for(let i = 0; i < 12; i++){
+        let surplus = energyArr[i] - consumeModeEnergy[i];
+        energyBalanceChart.config.data.datasets[0].data[i] = surplus/Math.pow(10,6);
+        energyBalanceChart.config.data.datasets[1].data[i] = consumeModeEnergy[i]/Math.pow(10,6);
+    }
+    energyBalanceChart.update();
+
+}
+
 function sumObjs(obj){
     let sum = 0;
     let sumArr = [];
@@ -1414,6 +1493,7 @@ function sumObjs(obj){
 
 function setConsumeType(n){
     consumeType = n;
+    updateChartMode(n);
     updateZones(lastResource);
 }
 
@@ -1819,7 +1899,7 @@ function calculateData(){
 
     let effectiveRain = [];
     let riverFlow = [];
-    let energyArr = [];
+    
     
     for(let i = 0; i < 12; i++){
         let value = calculateEffectiveRain(months[i].value, N);
@@ -1832,14 +1912,6 @@ function calculateData(){
 
     }
 
-    let days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    let waterArr = [];
-    for(let i = 0; i < annualCityConsumption.water.length; i++){
-        let q = (annualCityConsumption.water[i]/days[i])/cityConsumption.people;
-        let w = calculateWater(q);
-        waterArr.push(w);
-    }
-    
     effectiveChart.config.data.datasets[0].data = [effectiveRain[0],effectiveRain[1],effectiveRain[2],effectiveRain[3],
                                                    effectiveRain[4],effectiveRain[5],effectiveRain[6],effectiveRain[7],
                                                    effectiveRain[8],effectiveRain[9],effectiveRain[10],effectiveRain[11]];
@@ -1856,6 +1928,14 @@ function calculateData(){
                                                    energyArr[8]/Math.pow(10, 6),energyArr[9]/Math.pow(10, 6),energyArr[10]/Math.pow(10, 6),energyArr[11]/Math.pow(10, 6)];
     energyChart.update();
 
+    let days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    let waterArr = [];
+    for(let i = 0; i < annualCityConsumption.water.norm.length; i++){
+        let q = (annualCityConsumption.water.norm[i]/days[i])/cityConsumption.people;
+        let w = calculateWater(q);
+        waterArr.push(w);
+    }
+
     waterChartUsed.config.data.datasets[0].data = [waterArr[0].production,waterArr[1].production,waterArr[2].production,waterArr[3].production,
                                                    waterArr[4].production,waterArr[5].production,waterArr[6].production,waterArr[7].production,
                                                    waterArr[8].production,waterArr[9].production,waterArr[10].production,waterArr[11].production];
@@ -1866,8 +1946,6 @@ function calculateData(){
                                                 waterArr[8].distributed,waterArr[9].distributed,waterArr[10].distributed,waterArr[11].distributed];
     waterChart.update();
 
-
-    
     for(let i = 0; i < 12; i++){
         let flowEnergy = (riverFlow[i]*R)/100;
         let flowWater = (waterArr[i].production*Math.pow(10,9)/86400 * 30)/1000;
@@ -1879,9 +1957,9 @@ function calculateData(){
     finalChart.update();
 
     for(let i = 0; i < 12; i++){
-        let surplus = energyArr[i] - annualCityConsumption.energy[i];
+        let surplus = energyArr[i] - annualCityConsumption.energy.norm[i];
         energyBalanceChart.config.data.datasets[0].data[i] = surplus/Math.pow(10,6);
-        energyBalanceChart.config.data.datasets[1].data[i] = annualCityConsumption.energy[i]/Math.pow(10,6);
+        energyBalanceChart.config.data.datasets[1].data[i] = annualCityConsumption.energy.norm[i]/Math.pow(10,6);
     }
     energyBalanceChart.update();
     
