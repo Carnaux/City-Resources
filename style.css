@@ -1,3 +1,13 @@
+body{
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+}
+#title{
+    font-size: 50px; 
+    margin-left: 40%;
+    text-align: center;
+}
 .bt{
     border-style: solid;
     border-color: #008000;
@@ -5,4 +15,51 @@
     border-radius: 5px;
     color: white;
     text-decoration: none;
+    font-size: 20px;
 }
+#mainImg{
+    margin-left: 30%; 
+    margin-right: auto; 
+    width: 500px; 
+    height: 300px;
+}
+#sub{
+    text-align: center;
+    font-size: 30px;
+}
+#bt1{
+    margin-left: 40%;
+}
+#bt2{
+    margin-left: 20px;
+}
+
+@media only screen and (max-width: 600px) {
+    #title{
+        font-size: 40px;
+        margin-left: 0;
+        margin-top: 20px;
+    }
+    #mainImg{
+        width: 100%;
+        height: auto;
+        margin-left: 0;
+        margin-top: 20px;
+    }
+    #sub{
+        font-size: 20px;
+    }
+    #bt1{
+        position: absolute;
+        bottom: 20%;
+        left: 30%;
+        margin-left: 0;
+    }
+    #bt2{
+        position: absolute;
+        bottom: 10%;
+        left: 35%;
+        margin-left: 0;
+    }
+    
+  }

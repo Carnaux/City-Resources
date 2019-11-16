@@ -40,7 +40,7 @@
             
             <p id="title" style="font-size: 50px;">City Resources</p>
             <p>City Resources is a project made for a Statistics and Probability class.</p>
-            <img src="house2.png" style="margin-left: 15%; margin-right: auto; width: 800px; height: 500px;">
+            <img id="housesImg" src="house2.png" class="imgMobile">
         </div>
         <div id="disclaimer">
             <p style="font-size: 30px; color: red;">WARNING: This project do not show real data, and the relations and calculation can be wrong!</p>
@@ -76,11 +76,11 @@
             </ul>
             <p> After a house is generated, the code also randomizes a usage of each household item, for example, if there is 3 residents,<br> they will use the shower at least 3 times a day (1 shower per person), but they can use it more times,<br> with that we can simulate how much energy and water this house will consume in a day, month, or year. After generating the frequency of use for each house,<br> we simulate a year and sum the data from all the houses and display it in a chart.</p>
             <br>
-            <img id="imgCity" src="city.png">
+            <img id="imgCity" class="imgMobile" src="city.png">
             <br>
             <p>There are three types if buildings, a 1 floor house, a 2 floor house and a 5 floor building(Wich has 4 apartments per floor + the entrance, in total 16 apartments)</p>
             <br>
-            <img id="imgHouses" src="houses.png">
+            <img id="imgHouses" class="imgMobile" src="houses.png">
         </div>
         <div id="resources">
             <p style="font-size: 50px;">The Resources</p>
@@ -92,7 +92,7 @@
 
             <br>
             <p>The menu where you edit the river and see it's mean flow rate per month (base flow + rain).</p>
-            <img id="basinMenu" src="basin.png">
+            <img id="basinMenu" class="imgMobile" src="basin.png">
             <p style="font-size: 15px;">Chart 1 - Basin Configs</p>
             <br>
             <p style="font-size: 20px;"><b>The runoff calculations</b></p>
@@ -222,7 +222,7 @@
 
             <br>
             <p>The menu where you edit the rain regime and see the effective rain based on the runoff number.</p>
-            <img id="basinMenu" src="rain.png">
+            <img id="basinMenu" class="imgMobile" src="rain.png">
             <p style="font-size: 15px;">Chart 2 - Rain Configs</p>
             <br>
             <br>
@@ -245,7 +245,7 @@
             <p>`"Qdist" = Qm * k1 * k2 (L/s)`</p>
             <br>
             <p>The menu where you edit the water production.</p>
-            <img id="waterMenu" src="water.png">
+            <img id="waterMenu" class="imgMobile" src="water.png">
             <p style="font-size: 15px;">Chart 3 - Water Configs</p>
             <br>
             <br>
@@ -264,14 +264,14 @@
             <p>Where,<br>Cf = "It is the capacity factor, corresponding to the percentage of equivalent time at<br> which the plant would be generating full capacity."<a href="http://hidro.gd/calculando-a-energia-gerada/">[3]</a>
             </p>
             <br>
-            <img id="basinMenu" src="energy.png">
+            <img id="basinMenu" class="imgMobile" src="energy.png">
             <p style="font-size: 15px;">Chart 4 - Energy Configs</p>
         </div>
         <div id="relation">
             <p id="title" style="font-size: 50px;">How everything is related</p>
             <p>The objective of the project was to get an ideia on how resources can be related and how we can use simulations to manage ourselves in a better way.</p>
             <p>In the next chart is shown the monthly balance of energy produced and consumed,<br> and how much water was taken from the river. Based on that we can predict droughts and blackouts in the city.</p>
-            <img id="basinMenu" src="report.png">
+            <img id="basinMenu" class="imgMobile" src="report.png">
             <p style="font-size: 15px;">Chart 5 - Final report</p>
         </div>
         <div id="thanks">

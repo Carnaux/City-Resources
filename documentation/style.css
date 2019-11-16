@@ -52,18 +52,49 @@
 table, td, th {  
     border: 1px solid #ddd;
     text-align: left;
-  }
+}
   
-  table {
-      font-size: 15px;
+table {
+    font-size: 15px;
     border-collapse: collapse;
     width: 100%;
-  }
-  
-  th, td {
-    padding: 15px;
-  }
+}
 
+th, td {
+    padding: 15px;
+}
+
+#housesImg{
+    margin-left: 15%; 
+    margin-right: auto; 
+    width: 800px; 
+    height: 500px;
+}
+
+@media only screen and (max-width: 600px) {
+    #sideMenu{ 
+       display: none;
+    }
+    #sideMenubg{ 
+        display: none;
+    }
+    #content{
+        left: 0;
+        width: 100%; 
+    }
+    .imgMobile{
+        width: 100%;
+        height: auto;
+    }
+    #waterMenu{
+        width: 100%;
+        height: auto;
+    }
+    #housesImg{
+        width: 100%;
+        height: auto;
+    }
+} 
 @media only screen and (min-width: 992px) {
 
     #imgCity{
